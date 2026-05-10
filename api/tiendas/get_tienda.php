@@ -2,7 +2,7 @@
     require_once "../../validations/conection.php"; 
     $id = (int)($_GET['id'] ?? 0);
     
-    $cons = $connect->prepare("SELECT * FROM tiendas WHERE tiendas_id = ? LIMIT 1");
+    $cons = $conn->prepare("SELECT * FROM tiendas WHERE tiendas_id = ? LIMIT 1");
     $cons->bind_param('i', $id);
     $cons->execute();
     

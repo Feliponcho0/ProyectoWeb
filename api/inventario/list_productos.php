@@ -1,6 +1,6 @@
 <?php
 require_once '../../validations/conection.php';
-$res = $connect->query("SELECT * FROM productos ORDER BY producto_id DESC");
+$res = $conn->query("SELECT * FROM productos ORDER BY producto_id DESC");
 $data = [];
 while($row = $res->fetch_assoc()){
     $row['producto_id'] = (int)$row['producto_id'];

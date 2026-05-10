@@ -11,7 +11,7 @@ if (!$id) {
 
 // 1 - activo: Si es 1, (1-1) = 0. Si es 0, (1-0) = 1. ¡Un interruptor perfecto!
 $query = "UPDATE tiendas SET activo = 1 - activo WHERE tiendas_id = ?";
-$cons = $connect->prepare($query);
+$cons = $conn->prepare($query);
 $cons->bind_param("i", $id);
 
 if ($cons->execute()) {

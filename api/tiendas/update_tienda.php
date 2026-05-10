@@ -13,7 +13,7 @@ if($id <= 0 || empty($nombre)){
 }
 
 $query = "UPDATE tiendas SET nombre_tienda = ?, rfc = ?, direccion = ?, telefono = ? WHERE tiendas_id = ?";
-$update_tienda = $connect->prepare($query);
+$update_tienda = $conn->prepare($query);
 $update_tienda->bind_param("ssssi", $nombre, $rfc, $direccion, $telefono, $id);
 
 if($update_tienda->execute()){

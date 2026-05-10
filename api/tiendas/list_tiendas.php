@@ -1,6 +1,6 @@
 <?php
 require_once "../../validations/conection.php";
-    $res = $connect->query("SELECT * FROM tiendas ORDER BY tiendas_id DESC");
+    $res = $conn->query("SELECT * FROM tiendas ORDER BY tiendas_id DESC");
     
     $data = [];
     

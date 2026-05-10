@@ -7,7 +7,7 @@ $direccion = $_POST['direccion'] ?? '';
 $telefono = $_POST['telefono'] ?? '';
 
 $query="INSERT INTO tiendas (nombre_tienda, rfc, direccion, telefono) VALUES(?, ?, ?, ?)";
-$insert_tiendas=$connect->prepare($query);
+$insert_tiendas=$conn->prepare($query);
 $insert_tiendas->bind_param("ssss", $nombre_tienda, $rfc, $direccion, $telefono);
 
 $res = [];
