@@ -1,0 +1,33 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+
+#burbujas-container{
+    position: relative;
+    overflow: hidden;
+}
+
+.burbuja{
+    position: absolute;
+    bottom: 0;
+    background-color: rgba(0, 255, 247, 0.3);
+    border-radius: 50%;
+    opacity: 0;
+    pointer-events: none;
+    animation: moverArriba linear;
+}
+
+@keyframes moverArriba {
+    0% {
+        opacity: 0;
+        transform: translateY(0);
+        }
+    25% {
+        opacity: 1;
+        }
+    100% {
+        opacity: 0;
+        transform: translateY(-100vh);
+        }
+    }

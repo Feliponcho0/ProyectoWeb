@@ -1,0 +1,170 @@
+    :root{
+        --colorBody: #cacbcd;
+        --colorTopbar: #1A2B4A;
+        --colorDropdown: #243656;
+        --colorSidebar: #ffffff;
+        --colorLink: #2563EB;
+
+        --colorEfectoHoverActivo: #e8f2ff;
+        --colorBorde: #c2dcff;
+        --colorEfectoHover: #F1F5F9;
+        --colorCursor: #334155;
+        --colorTopbar2: #931212;
+        --colorNaranja: #D97706;
+
+        --colorVerde: #136b42;
+        --bg-color: #ffffff;
+        --text-color: #000000;
+    }
+
+    /* modo oscuro*/
+    body.dark-theme {
+        --bg-color: #121212;
+        --text-color: #ffffff;
+        background-image: none;
+    }
+
+    body {
+        background-color: var(--bg-color);
+        color: var(--text-color);
+        transition: 0.3s;
+    }
+
+    html, body{
+        min-height: 100%;
+    }
+    /*termina*/
+    
+    body:not(.dark-theme){
+        background-image: linear-gradient(to top, var(--colorBody) 0%, #e6e7e7 100%);
+    }
+    
+    #mi-contenido {
+        display: none;
+    }
+
+    /* Barra de navegación superior */
+    .navbar-superior{
+        background-color: var(--colorTopbar);
+    }
+
+    .tipoLetra{
+        font-family: 'Inter', sans-serif;
+    }
+
+    .navbar h6{
+        font-size: 12px;
+    }
+
+    /* Logo */
+    .logo{
+        width: 220px;
+        height: auto;
+        margin: 0;  
+    }
+
+    /* Dropdown */
+    .fondoDropdown{
+        background-color: var(--colorDropdown);
+    }
+
+    .menu-desplegable strong {
+        font-size: 14px; 
+    }   
+
+    .menu-desplegable small {
+        font-size: 12px; 
+    }
+
+    .menu-desplegable span {
+        font-size: 11px;
+    }
+
+    .menu-desplegable{
+        width: 220px;
+        
+    }
+
+    .dropdown-menu p{
+        font-size: 14px;
+    }
+
+    .dropdown-item:hover{
+        background-color: var(--colorEfectoHover);
+    }
+
+    /* Sidebar */
+    .bg-sidebar{
+        background-color: var(--colorSidebar);
+        overflow: auto;
+    }
+
+    .nav-link {
+        color: var(--colorLink) !important;
+        font-size: 15px;
+    }
+
+    .sidebar small{
+        font-size: 11px;
+        color: #383f3f;
+    }
+    
+    /* Efectos de hover de sidebar */
+    .nav-link:hover {
+        background-color: var(--colorEfectoHover);
+        color: var(--colorCursor)!important;
+        font-weight: 600;
+    }
+
+    .boton-azul-hover:hover{
+        background-color: var(--colorTopbar) !important;
+        color:#ffffff !important;
+        transition: all 0.5s ease;
+    }
+
+    .boton-rojo-hover:hover{
+        background-color: var(--colorTopbar2) !important;
+        color:#ffffff !important;
+        transition: all 0.5s ease;
+    }
+
+    .boton-verde-hover:hover{
+        background-color: var(--colorVerde) !important;
+        color:#ffffff !important;
+        transition: all 0.5s ease;
+    }
+
+    .nav-link.active {
+        background-color: var(--colorEfectoHoverActivo) !important;
+        border: 1px solid var(--colorBorde) !important;
+        
+    }
+    /*
+    .card:hover {
+        transition: all 3s ease;
+        transform: scale(1.01);
+    }*/
+
+
+    .row.flex-nowrap {
+    overflow: visible !important;
+    }
+
+    .col.p-0 {
+        overflow: visible !important;
+    }
+
+
+    #contenido {
+        height: calc(100vh - 70px);
+        overflow-y: auto;
+        padding: 1.5rem;
+    }
+
+    #contenedorTiendas, #contenedorUsuarios {
+        width: 100%;
+    }
+    
+    .card {
+        margin-bottom: 1rem;
+    }
