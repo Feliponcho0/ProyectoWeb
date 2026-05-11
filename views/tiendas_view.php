@@ -24,8 +24,7 @@
 
     <div id="alertBox"></div>
 
-    <div class="row mt-3" id="contenedor_tiendas">
-    </div>
+    <div class="row mt-3" id="contenedor_tiendas"></div>
 </div>
 <!-- Modal agregar tienda -->
 <div class="modal fade" tabindex="-1" aria-hidden="true" id="modal_agregar_tienda">
