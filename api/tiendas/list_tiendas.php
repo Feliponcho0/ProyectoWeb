@@ -1,4 +1,5 @@
 <?php
+require_once "../../validations/check.php";
 require_once "../../validations/conection.php";
     $res = $conn->query("SELECT * FROM tiendas ORDER BY tiendas_id DESC");
     

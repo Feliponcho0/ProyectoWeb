@@ -1,4 +1,5 @@
 <?php
+require_once "../../validations/check.php";
 require_once "../../validations/conection.php";
 
 $id = $_POST['id_edit'] ?? 0;

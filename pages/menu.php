@@ -1,3 +1,14 @@
+<?php 
+require_once "../validations/check.php"; 
+require_once "../validations/conection.php";
+
+$id_t = $_SESSION['tiendas_id'];
+$res_t = $conn->query("SELECT nombre_tienda FROM tiendas WHERE tiendas_id = $id_t");
+$fila_t = $res_t->fetch_assoc();
+$nombre_tienda = $fila_t['nombre_tienda'];
+?>
+
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -13,6 +24,9 @@
     <!--JQuery-->
     <script src="../js/jquery-4.0.0.js"></script>
     <script src = "../js/configuration.js"></script>
+
+    <!--sweetAlert-->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <!--Google Fonts-->
     <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">

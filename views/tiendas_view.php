@@ -268,6 +268,7 @@
 
         $(document).on('click', '.btn_cambiar_estatus', function() {
             const id = $(this).data('id');
+            console.log("ID capturado:", id); 
             const nombre = $(this).data('nombre');
             const estatusActual = $(this).data('status'); 
 
@@ -275,11 +276,13 @@
                 title: (estatusActual == 1) ? `¿Desactivar ${nombre}?` : `¿Activar ${nombre}?`,
                 icon: "warning",
                 showCancelButton: true,
-                confirmButtonColor: (estatusActual == 1) ? "#d33" : "#28a745",
+                confirmButtonColor:"#22b043",
+                cancelButtonColor:"#ff0000",
                 confirmButtonText: "Sí, cambiar",
                 cancelButtonText: "Cancelar"
             }).then((result) => {
-                if (result.isConfirmed) {
+                if (result.isConfirmed) {   
+                    console.log("Enviando ID:", id);
                     $.post('../api/tiendas/estatus_tiendas.php', { tiendas_id: id }, function(resp) {
                         const res = JSON.parse(resp);
                         

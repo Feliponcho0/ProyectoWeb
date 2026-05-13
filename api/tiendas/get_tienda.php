@@ -1,4 +1,5 @@
 <?php
+    require_once "../../validations/check.php";
     require_once "../../validations/conection.php"; 
     $id = (int)($_GET['id'] ?? 0);
     

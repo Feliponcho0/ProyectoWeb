@@ -1,3 +1,14 @@
-<div class=" pb-2 mb-0">
-    <h1 class="tipoLetra fw-semibold pb-2 fs-4">Hola desde dashboard</h1>
+<div class="container-fluid mt-4">
+    <div class="row">
+        <div class="col-12">
+            <div class="card shadow-sm border-0 bg-light p-4">
+                <h1 class="tipoLetra fw-bold fs-3">
+                    Bienvenido a
+                    <span>
+                        <?php echo $nombre_tienda; ?>
+                    </span>
+                </h1>
+            </div>
+        </div>
+    </div>
 </div>
