@@ -1,14 +1,23 @@
 <?php 
-require_once "../validations/check.php"; 
-require_once "../validations/conection.php";
-
-$id_t = $_SESSION['tiendas_id'];
-$res_t = $conn->query("SELECT nombre_tienda FROM tiendas WHERE tiendas_id = $id_t");
-$fila_t = $res_t->fetch_assoc();
-$nombre_tienda = $fila_t['nombre_tienda'];
+    require_once "../validations/check.php"; 
+    require_once "../validations/conection.php";
+    // Manejar la tienda SOLO si el usuario no es admin y tiene tienda asignada
+    $nombre_tienda = "Sin tienda asignada"; // Valor por defecto
+    
+    if (isset($_SESSION['tiendas_id']) && $_SESSION['tiendas_id'] !== null && $_SESSION['tiendas_id'] > 0) {
+        $id_t = $_SESSION['tiendas_id'];
+        $res_t = $conn->query("SELECT nombre_tienda FROM tiendas WHERE tiendas_id = $id_t");
+        if ($res_t && $res_t->num_rows > 0) {
+            $fila_t = $res_t->fetch_assoc();
+            $nombre_tienda = $fila_t['nombre_tienda'];
+        }
+    }
+    
+    // Obtener datos del usuario desde la sesión
+    $nombre_usuario = $_SESSION['nombre_usuario'] ?? 'Usuario';
+    $rol_usuario = $_SESSION['rol'] ?? '';
+    $correo_usuario = $_SESSION['correo'] ?? '';
 ?>
-
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -113,17 +122,21 @@ $nombre_tienda = $fila_t['nombre_tienda'];
             <nav class="navbar navbar-superior px-4">
                 <div class="btn-group me-auto">
                     <button type="button" class="btn text-white bg-white bg-opacity-10">
-                        Abarrotes López
+                        <?php echo htmlspecialchars($nombre_tienda); ?>
                     </button>
+                    <!-- Solo mostrar el dropdown para cambiar tienda si NO es admin -->
+                    <?php if ($rol_usuario !== 'Administrador'): ?>
                     <button type="button" class="btn text-white bg-white bg-opacity-10 dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown">
                     </button>
-                    <div id = "add">
+                    <div id="add">
                         <ul class="dropdown-menu shadow p-1 border-1">
-                            <li class="dropdown-item" type = "button">
-                                Abarrotes López
+                            <!-- Aquí puedes cargar las tiendas disponibles para cambiar -->
+                            <li class="dropdown-item" type="button">
+                                <?php echo htmlspecialchars($nombre_tienda); ?>
                             </li>
                         </ul>
                     </div>
+                    <?php endif; ?>
                 </div>
 
                 <div class="btn-group ms-auto">

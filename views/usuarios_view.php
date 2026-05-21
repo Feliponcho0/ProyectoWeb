@@ -7,43 +7,40 @@
             </svg>
             Agregar usuario
         </button>
+        
         <dialog id="agregarUser" class="border rounded border-primary p-4">
-            <h3>
-                Datos del nuevo usuario
-            </h3>
+            <h3>Datos del nuevo usuario</h3>
             <div class="form-floating mt-4 mb-3">
                 <input type="text" class="form-control" id="nuevo_nombre" placeholder="Nombre de usuario" required>
-                <label>
-                    Nombre de usuario
-                </label>
+                <label>Nombre de usuario</label>
             </div>
             <div class="form-floating mb-3">
                 <input type="password" class="form-control" id="nuevo_password" placeholder="Contraseña" required>
-                <label>
-                    Contraseña
-                </label>
+                <label>Contraseña</label>
             </div>
             <div class="form-floating mb-3">
                 <input type="email" class="form-control" id="nuevo_correo" placeholder="Correo electronico">
-                <label>
-                    Correo electrónico
-                </label>
+                <label>Correo electrónico</label>
             </div>
             <p class="mb-1">Rol</p>
             <div class="mb-3">
                 <label class="form-check-inline">
-                    <input type="radio" name="nuevo_rol" value="Administrador">
-                    Administrador
+                    <input type="radio" name="nuevo_rol" value="Gerente"> Gerente
                 </label>
                 <label class="form-check-inline">
-                    <input type="radio" name="nuevo_rol" value="Gerente">
-                    Gerente
-                </label>
-                <label class="form-check-inline">
-                    <input type="radio" name="nuevo_rol" value="Cajero">
-                    Cajero
+                    <input type="radio" name="nuevo_rol" value="Cajero"> Cajero
                 </label>
             </div>
+            
+            <div class="dropdown px-3 mb-3">
+                <button class="btn btn-light border border-primary dropdown-toggle" type="button" id="filtroTiendaBtn" data-bs-toggle="dropdown">
+                    Seleccionar tienda
+                </button>
+                <ul class="dropdown-menu" id="listaTiendas">
+                    <li><a class="dropdown-item" href="#">Cargando tiendas...</a></li>
+                </ul>
+            </div>
+            
             <div class="d-flex justify-content-center gap-2 mt-4">
                 <button onclick="document.getElementById('agregarUser').close();" class="boton-rojo-hover btn bg-danger text-white">Cancelar</button>
                 <button onclick="agregarUsuario();" class="boton-verde-hover btn bg-success text-white">Agregar</button>
@@ -59,14 +56,14 @@
                         <path d="M21 21l-6 -6" />
                     </svg>
                 </span>
-                <input id="searchUsuarios" class="form-control border-1" type="search" placeholder="Buscar usuario...">
+                <input id = "searchUsuarios" class="form-control border-1" type="search" placeholder="Buscar usuario...">
             </div>
         </div>
         <div class="dropdown px-3">
-            <button class="btn btn-light border border-primary dropdown-toggle" type="button" id="filtroRolBtn" data-bs-toggle="dropdown">
+            <button class = "btn btn-light border border-primary dropdown-toggle" type="button" id="filtroRolBtn" data-bs-toggle="dropdown">
                 Todos los roles
             </button>
-            <ul class="dropdown-menu">
+            <ul class = "dropdown-menu">
                 <li><a class="dropdown-item filtro-rol" data-rol="todos" href="#">Todos los roles</a></li>
                 <li><a class="dropdown-item filtro-rol" data-rol="Administrador" href="#">Administrador</a></li>
                 <li><a class="dropdown-item filtro-rol" data-rol="Gerente" href="#">Gerente</a></li>
@@ -128,14 +125,51 @@
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
+    
     let filtroRolActual = 'todos';
     let busquedaActual = '';
+    let tiendaSeleccionadaId = null;
+
+    // Función para cargar tiendas en el dropdown del modal
+    function cargarTiendasEnDropdown() {
+        $.getJSON("../api/tiendas/tiendasList.php", function(resp) {
+            if (resp.ok && resp.data && resp.data.length > 0) {
+                const lista = $('#listaTiendas');
+                lista.empty();
+                
+                resp.data.forEach(tienda => {
+                    lista.append(`
+                        <li>
+                            <a class="dropdown-item opcion-tienda" 
+                            href="#" 
+                            data-tienda-id="${tienda.tiendas_id}" 
+                            data-tienda-nombre="${escapeHtml(tienda.nombre)}">
+                                ${escapeHtml(tienda.nombre)}
+                            </a>
+                        </li>
+                    `);
+                });
+                
+                $('.opcion-tienda').off('click').on('click', function(e) {
+                    e.preventDefault();
+                    tiendaSeleccionadaId = $(this).data('tienda-id');
+                    const tiendaNombre = $(this).data('tienda-nombre');
+                    $('#filtroTiendaBtn').html(tiendaNombre);
+                    $('#filtroTiendaBtn').removeClass('btn-light').addClass('btn-success');
+                });
+            } else {
+                $('#listaTiendas').html('<li><a class="dropdown-item" href="#">No hay tiendas disponibles</a></li>');
+            }
+        }).fail(function() {
+            $('#listaTiendas').html('<li><a class="dropdown-item text-danger" href="#">Error al cargar tiendas</a></li>');
+        });
+    }
 
     function loadUsuarios() {
         const busqueda = document.getElementById('searchUsuarios').value;
         const rol = filtroRolActual;
         
-        $.getJSON("../db/consult/userList.php", { search: busqueda, rol: rol }, function(resp) {
+        $.getJSON("../api/usuarios/userList.php", { search: busqueda, rol: rol }, function(resp) {
             if (!resp.ok) {
                 alert("Error al cargar usuarios");
                 return;
@@ -158,7 +192,7 @@
                         </div>
                         <div class="mt-3 ms-auto">
                             ${usuario.activo == 1 ?
-                                `<button onclick="desactivarUsuario(${usuario.usuarios_id})" class="boton-rojo-hover btn bg-danger btn-sm me-2 text-white">
+                                `<button class = "btn_cambiar_estatus boton-rojo-hover btn bg-danger btn-sm me-2 text-white" data-id = "${usuario.usuarios_id}" data-nombre = "${usuario.nombre_usuario}" data-status = "${usuario.activo}">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="1.25">
                                         <path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" />
                                         <path d="M13.5 6.5l4 4" />
@@ -166,7 +200,7 @@
                                     Desactivar
                                 </button>`
                                 :
-                                `<button onclick="activarUsuario(${usuario.usuarios_id})" class="boton-verde-hover btn bg-success btn-sm me-2 text-white">
+                                `<button class = "btn_cambiar_estatus boton-verde-hover btn bg-success btn-sm me-2 text-white" data-id = "${usuario.usuarios_id}" data-nombre = "${usuario.nombre_usuario}" data-status = "${usuario.activo}">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="1.25">
                                         <path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" />
                                         <path d="M13.5 6.5l4 4" />
@@ -219,12 +253,17 @@
             alert('Debe seleccionar un rol');
             return;
         }
+        if (!tiendaSeleccionadaId) {
+            alert('Debe seleccionar una tienda');
+            return;
+        }
         
-        $.post("../db/insert/insertUsers.php", {
+        $.post("../api/usuarios/insertUsers.php", {
             nombre_usuario: nombre,
             password: password,
             correo: correo,
-            rol: rol.value
+            rol: rol.value,
+            tiendas_id: tiendaSeleccionadaId 
         }, function(resp) {
             if (resp.ok) {
                 document.getElementById('agregarUser').close();
@@ -232,6 +271,11 @@
                 document.getElementById('nuevo_password').value = '';
                 document.getElementById('nuevo_correo').value = '';
                 document.querySelectorAll('input[name="nuevo_rol"]').forEach(r => r.checked = false);
+                
+                $('#filtroTiendaBtn').html('Seleccionar tienda');
+                $('#filtroTiendaBtn').removeClass('btn-success').addClass('btn-light');
+                tiendaSeleccionadaId = null;
+                
                 loadUsuarios();
                 alert('Usuario agregado correctamente');
             } else {
@@ -239,48 +283,86 @@
             }
         }, "json");
     }
+    
+    $(document).on('click', '.btn_cambiar_estatus', function() {
+        const id = $(this).data('id');
+        const nombre = $(this).data('nombre');
+        const estatusActual = $(this).data('status');
 
-    function activarUsuario(id) {
-        $.post("../db/change/updateEstado.php", { usuarios_id: id, activo: 1 }, function(resp) {/////////////////////////////////////////////////////////////////////////
-            if (resp.ok) {
-                loadUsuarios();
-                alert('Usuario activado');
+        Swal.fire({
+            title: (estatusActual == 1) ? `¿Desactivar ${nombre}?` : `¿Activar ${nombre}?`,
+            text: (estatusActual == 1) ? 'El usuario no podrá iniciar sesión' : 'El usuario podrá volver a acceder al sistema',
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#22b043",
+            cancelButtonColor: "#ff0000",
+            confirmButtonText: "Sí, cambiar",
+            cancelButtonText: "Cancelar"
+        }).then((result) => {
+            if (result.isConfirmed) {   
+                $.post('../api/usuarios/updateEstado.php', { 
+                    usuarios_id: id, 
+                    activo: (estatusActual == 1) ? 0 : 1
+                }, function(resp) {
+                    const res = JSON.parse(resp);
+                    
+                    if (res.ok) {
+                        Swal.fire("¡Listo!", `Usuario ${estatusActual == 1 ? 'desactivado' : 'activado'} correctamente`, "success");
+                        loadUsuarios(); 
+                    } else {
+                        Swal.fire("Error", res.msg || "No se pudo cambiar el estado", "error");
+                    }
+                }).fail(function() {
+                    Swal.fire("Error", "Error de conexión con el servidor", "error");
+                });
             }
-        }, "json");
-    }
-
-    function desactivarUsuario(id) {
-        if (confirm('¿Estás seguro de desactivar este usuario?')) {
-            $.post("../db/change/updateEstado.php", { usuarios_id: id, activo: 0 }, function(resp) {
-                if (resp.ok) {
-                    loadUsuarios();
-                    alert('Usuario desactivado');
-                }
-            }, "json");
-        }
-    }
+        });
+    });
 
     $(document).ready(function() {
         const modalEdit = new bootstrap.Modal(document.getElementById('modalEdit'));
+        
+        const agregarUserDialog = document.getElementById('agregarUser');
+        agregarUserDialog.addEventListener('open', function() {
+            cargarTiendasEnDropdown();
+            tiendaSeleccionadaId = null;
+            $('#filtroTiendaBtn').html('Seleccionar tienda');
+            $('#filtroTiendaBtn').removeClass('btn-success').addClass('btn-light');
+        });
         
         document.querySelectorAll(".filtro-rol").forEach(function(item) {
             item.addEventListener("click", function(e) {
                 e.preventDefault();
                 filtroRolActual = this.getAttribute("data-rol");
-                document.getElementById("filtroRolBtn").innerHTML = this.innerHTML;
+                const textoMostrar = this.innerHTML;
+                document.getElementById("filtroRolBtn").innerHTML = textoMostrar;
+                
+                if (filtroRolActual === 'todos') {
+                    document.getElementById("filtroRolBtn").classList.remove('btn-primary');
+                    document.getElementById("filtroRolBtn").classList.add('btn-light');
+                } else {
+                    document.getElementById("filtroRolBtn").classList.remove('btn-light');
+                    document.getElementById("filtroRolBtn").classList.add('btn-primary');
+                }
+                
                 loadUsuarios();
             });
         });
-        
+
+        let timeoutId;
         document.getElementById("searchUsuarios").addEventListener("keyup", function() {
-            loadUsuarios();
+            clearTimeout(timeoutId);
+            timeoutId = setTimeout(() => {
+                loadUsuarios();
+            }, 300);
         });
         
+        // Editar usuario
         $(document).on("click", ".btn-edit", function() {
             const usuarios_id = $(this).data("id");
-            $.getJSON("../db/consult/getUsuario.php", { usuarios_id: usuarios_id }, function(resp) {
+            $.getJSON("../api/usuarios/getUsuario.php", { usuarios_id: usuarios_id }, function(resp) {
                 if (!resp.ok) {
-                    alert("Usuario no encontrado");
+                    Swal.fire('Error', 'Usuario no encontrado', 'error');
                     return;
                 }
                 const u = resp.data;
@@ -290,26 +372,36 @@
                 $("#edit_correo").val(u.correo);
                 $('input[name="edit_rol"][value="' + u.rol + '"]').prop("checked", true);
                 modalEdit.show();
+            }).fail(function() {
+                Swal.fire('Error', 'Error al cargar los datos del usuario', 'error');
             });
         });
         
         $("#formEdit").submit(function(e) {
             e.preventDefault();
-            $.post("../db/update/updateUsuario.php", {
+            
+            const datos = {
                 usuarios_id: $("#id_edit").val(),
                 nombre_usuario: $("#edit_nombre").val(),
-                password: $("#edit_password").val(),
                 correo: $("#edit_correo").val(),
                 rol: $('input[name="edit_rol"]:checked').val()
-            }, function(resp) {
+            };
+            
+            if ($("#edit_password").val() !== '') {
+                datos.password = $("#edit_password").val();
+            }
+            
+            $.post("../api/usuarios/updateUsuario.php", datos, function(resp) {
                 if (resp.ok) {
                     modalEdit.hide();
                     loadUsuarios();
-                    alert('Usuario actualizado');
+                    Swal.fire('Éxito', 'Usuario actualizado correctamente', 'success');
                 } else {
-                    alert(resp.msg || 'Error al actualizar');
+                    Swal.fire('Error', resp.msg || 'Error al actualizar', 'error');
                 }
-            }, "json");
+            }, "json").fail(function() {
+                Swal.fire('Error', 'Error de conexión con el servidor', 'error');
+            });
         });
         
         loadUsuarios();
