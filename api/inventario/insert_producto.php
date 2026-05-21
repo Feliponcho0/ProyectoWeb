@@ -16,14 +16,14 @@ if($codigo === '' || $nombre_producto === '' || $tiendas_id <= 0){
 }
 
 // consulta de código único
-$stmt = $conn->prepare("SELECT producto_id FROM productos WHERE codigo = ?");
-$stmt->bind_param("s", $codigo);
+$stmt = $conn->prepare("SELECT producto_id FROM productos WHERE codigo = ? and tiendas_id = ?");
+$stmt->bind_param("si", $codigo, $tiendas_id);
 $stmt->execute();
 $result = $stmt->get_result();
 
 //validar que el producto no exista
 if ($result->num_rows > 0) {
-    echo json_encode(['ok' => false, 'msg' => 'El producto ya existe']);
+    echo json_encode(['ok' => false, 'msg' => 'Ese producto ya existe']);
     exit;
 }
 

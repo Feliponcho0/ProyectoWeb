@@ -1,7 +1,7 @@
 <div class="pb-2 mb-0">
     <h1 class=" tipoLetra fw-semibold pb-2 fs-4">Punto de venta</h1>
     <div class="row">
-        <div class="col-sm-9">
+        <div class="col-sm-12">
             <div class="card shadow h-100">
                 <div class="card-body">
                     <nav class="navbar">
@@ -32,7 +32,7 @@
                                 <td>Sabritas</td>
                                 <td>3</td>
                                 <td>$25.00</td>
-                                <td> </td>
+                                <td> $0.00</td>
                                 <td>$75.00</td>
                             </tr>
                         </table>
@@ -40,6 +40,7 @@
                 </div>
             </div>
         </div>
+        <!--
         <div class="col-sm-3">
             <div class="card shadow">
                 <div class="card-body titulo-secundario titulo-terciario">
@@ -92,5 +93,6 @@
                 </div>
             </div>
         </div>
+-->
     </div>
 </div>

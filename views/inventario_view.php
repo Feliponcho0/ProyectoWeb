@@ -14,11 +14,11 @@
             </span>
             <input id="search_productos" class="form-control border-1" type="search" placeholder="Buscar producto...">
         </div>
-        <select id="filtro_estatus" class="form-select border border-primary w-auto">
+        <select id="filtro_estado_productos" class="form-select border border-primary w-auto">
             <option value="">Todas los productos</option>
             <option value="1" selected>Activos</option>
             <option value="0">Inactivos</option>
-        </select>   
+        </select>
     </div>
 
     <div class="card border-0 shadow-sm">
@@ -42,6 +42,9 @@
                         </tr>
                     </tbody>
                 </table>
+            </div>
+            <div id="no_encontrado_productos" class="d-none text-center mt-4">
+                <h3 class="text-secondary fs-5">No se encontraron productos.</h3>
             </div>
         </div>
     </div>
@@ -119,36 +122,29 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <form id="form_editar_producto" method="POST">
+                <input type="hidden" name="id" id="editar_id">
                 <div class="modal-body">
                     <div class="row">
-                        <div class="col-md-6">
-                            <h2 class="small">Código</h2>
-                            <div class="mb-3">
-                                <input type="text" name="codigo" class="form-control" placeholder="Código" minlength="5" maxlength="20" required>
-                            </div>
-                        </div>
                         <div class="col-md-6">
                             <h2 class="small">Nombre</h2>
                             <div class="mb-3">
                                 <input type="text" name="nombre" class="form-control" placeholder="Nombre" minlength="2" maxlength="100" required>
                             </div>
                         </div>
-                    </div>
-                    <div class="row mt-3">
                         <div class="col-md-6">
                             <h2 class="small">Costo</h2>
                             <div class="mb-3">
                                 <input type="number" name="costo" class="form-control" placeholder="Costo" min="0" step="0.01" required>
                             </div> 
                         </div>
+                    </div>
+                    <div class="row mt-3">
                         <div class="col-md-6">
                             <h2 class="small">Precio</h2>
                             <div class="mb-3">
                                 <input type="number" name="precio" class="form-control" placeholder="Precio" min="0" step="0.01" required>
                             </div>
                         </div>
-                    </div>
-                    <div class="row mt-3">
                         <div class="col-md-6">
                             <h2 class="small">Stock</h2>
                             <div class="mb-3">
@@ -183,28 +179,41 @@
                 if (resp.ok){
                     const data= resp.data;
                     let html = '';
-                    data.forEach(producto => {
+                    data.forEach(p => {
+                        let estadoTexto;
+                        let estadoClaseBtn;
 
-                        let stockCantidad='';
-                        if (producto.stock <=5){
-                            stockCantidad = `<span class="badge bg-danger">${producto.stock}</span>`
+                        if (p.activo==1){
+                            estadoTexto = 'Activa';
+                            estadoClaseBtn = 'btn-success';
+                        }else{
+                            estadoTexto = 'Inactiva';
+                            estadoClaseBtn = 'btn-danger';
+                        }
+
+                        let stockCantidad=p.stock;
+                        if (p.stock <=5){
+                            stockCantidad = `<span class="badge bg-danger">${p.stock}</span>`
                         }
                         html += `
                             <tr>
-                                <td>${producto.codigo}</td>
-                                <td>${producto.nombre_producto}</td>
-                                <td>${producto.precio_compra}</td>
-                                <td>${producto.precio_venta}</td>
-                                <td>${producto.stock}</td>
-                                <td>${producto.activo == 1 ? 'Activo' : 'Inactivo'}</td>
+                                <td>${p.codigo}</td>
+                                <td>${p.nombre_producto}</td>
+                                <td>${p.precio_compra}</td>
+                                <td>${p.precio_venta}</td>
+                                <td>${p.stock}</td>
+                                <td>${p.activo == 1 ? 'Activo' : 'Inactivo'}</td>
                                 <td>
-                                    <button class="btn btn-sm btn-primary btn_editar" data-id="${producto.id}">Editar</button>
-                                    <button class="btn btn-sm btn-danger btn_eliminar" data-id="${producto.id}">Eliminar</button>
+                                    <button class="btn btn-sm btn-primary btn_editar" data-id="${p.producto_id}">Editar</button>
+                                    <button class="btn btn-sm ${estadoClaseBtn} btn_cambiar_estado" data-id="${p.producto_id}" data-nombre="${p.nombre_producto}" data-estado="${p.activo}">
+                                        ${estadoTexto}
+                                    </button>
                                 </td>
                             </tr>
                         `;
                     });
                     $('#contenedor_productos').html(html);
+                    filtrarProductos();
                 }
 
             });
@@ -216,17 +225,18 @@
             console.log("Datos enviados:", $(this).serialize());
             $.post('../api/inventario/insert_producto.php', $(this).serialize(), function(resp) {
                 console.log("Servidor dice:", resp);
+                modalAgregar.hide();
                 if (resp.ok){
                     showAlert('success', 'Producto agregado correctamente.');
                     cargarProductos();
-                    modalAgregar.hide();
                 } else {
-                    showAlert('danger', 'Error: ' + (resp.msg || 'Respuesta inválida del servidor'));
-                    //showAlert('danger', 'Error al agregar el producto. Intente nuevamente.');
+
+                    showAlert('danger',resp.msg || 'Error al agregar el producto.');
                 }
             }, 'json');
         });
 
+        // Agrega producto con el evento 
         $('#codigoProd').on('keypress', function(e) {
             if (e.which === 13) { 
                 e.preventDefault();
@@ -241,15 +251,14 @@
         // Obtener datos para editar producto
         $(document).on('click', '.btn_editar', function() {
             const id = $(this).data('id');
-            $.getJSON(`../api/inventario/get_producto.php?id=${id}`, function(resp) {
+            $.getJSON('../api/inventario/get_producto.php', { id: id }, function(resp) {
                 if (resp.ok){
-                    const producto = resp.data;
-                    $('#form_editar_producto [name="codigo"]').val(producto.codigo);
-                    $('#form_editar_producto [name="nombre"]').val(producto.nombre_producto);
-                    $('#form_editar_producto [name="costo"]').val(producto.precio_compra);
-                    $('#form_editar_producto [name="precio"]').val(producto.precio_venta);
-                    $('#form_editar_producto [name="stock"]').val(producto.stock);
-                    $('#form_editar_producto').data('id', id);
+                    const p = resp.data;
+                    $('#editar_id').val(p.producto_id);
+                    $('#form_editar_producto [name="nombre"]').val(p.nombre_producto);
+                    $('#form_editar_producto [name="costo"]').val(p.precio_compra);
+                    $('#form_editar_producto [name="precio"]').val(p.precio_venta);
+                    $('#form_editar_producto [name="stock"]').val(p.stock);
                     modaledit.show();
                 } else {
                     showAlert('danger', 'No se pudo cargar el producto para editar.');
@@ -257,52 +266,107 @@
             });
         });
         // Editar producto
-        $('#form_editar_producto').submit(function(e) {
+        $('#form_editar_producto').on('submit', function(e) {
             e.preventDefault();
-            const id = $(this).data('id');
-            const formData = $(this).serialize() + `&id=${id}`;
-            $.post('../api/inventario/update_producto.php', formData, function(resp) {
-                if (resp.ok){
-                    showAlert('success', 'Producto actualizado correctamente.');
-                    cargarProductos();
-                    modaledit.hide();
-                } else {
-                    showAlert('danger', 'Error al actualizar el producto. Intente nuevamente.');
+            $.post('../api/inventario/update_producto.php', $(this).serialize(), function(resp) {
+                try { 
+                    resp = JSON.parse(resp); 
+                } catch(e) { 
+                    resp = {ok: false, msg: 'Error al actualizar producto'}; 
                 }
+
+                if (!resp.ok) {
+                    showAlert('danger', resp.msg || 'Error al editar el producto');
+                    return;
+                }
+
+                modaledit.hide();
+                showAlert('success', 'Producto actualizado correctamente');   
+                cargarProductos(); 
             });
         });
 
-        // Estatus producto
-        $(document).on('click', '.btn_estatus', function() {
+        // Estado producto
+        $(document).on('click', '.btn_cambiar_estado', function() {
             const id = $(this).data('id');
+            const nombre = $(this).data('nombre');
+            const estadoActual = $(this).data('estado'); 
+
+
             Swal.fire({
-                title: '¿Desea cambiar el estado del producto?',
-                icon: 'warning',
+                title: (estadoActual == 1) ? `¿ Quieres desactivar el producto ${nombre}?` : `¿Quieres activar el producto ${nombre}?`,
+                icon: "warning",
                 showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Si, cambiar',
-                cancelButtonText: 'Cancelar'
+                confirmButtonColor: "#22b043",
+                cancelButtonColor: "#ff0000",
+                confirmButtonText: "Sí, cambiar",
+                cancelButtonText: "Cancelar"
             }).then((result) => {
-                if (result.isConfirmed) {
-                    $.post('../api/inventario/estatus_producto.php', {id:id}, function(resp) {
-                        if (resp.ok){
-                            Swal.fire('¡Éxito!', 'Estatus actualizado correctamente.', 'success');
-                            cargarProductos();
-                        } else {
-                            Swal.fire('Error', 'Error al actualizar el estado del producto.', 'error');
+                if (result.isConfirmed) {   
+                    console.log("Enviando ID producto:", id);
+                    
+                    $.post('../api/inventario/estado_producto.php', { id: id }, function(resp) {
+                        
+                        try {
+                            const res = JSON.parse(resp);
+                            if (res.ok) {
+                                Swal.fire("¡Listo!", "Estado actualizado", "success");
+                                cargarProductos(); 
+                            } else {
+                                Swal.fire("Error", res.msg || "No se pudo cambiar", "error");
+                            }
+                        } catch(e) {
+                            Swal.fire("Error", "Error en la respuesta del servidor", "error");
                         }
+                        
                     });
                 }
             });
         });
 
-        $("#search_productos").on("keyup", function() {
-            var textoEscrito = $(this).val().toLowerCase();
+        // funcion de busqueda y filtro de productos
+        function filtrarProductos() {
+            const busqueda_producto = $('#search_productos').val().toLowerCase();
+            const filtro_productos = $('#filtro_estado_productos').val();
+            let resultado= false
 
-            $("#contenedor_productos tr").filter(function() {
-                $(this).toggle($(this).text().toLowerCase().includes(textoEscrito))
+            $('#contenedor_productos tr').each(function() {
+                const codigo= $(this).find('td').eq(0).text().toLowerCase();
+                const nombre = $(this).find('td').eq(1).text().toLowerCase();
+                const activo = $(this).find('.btn_cambiar_estado').data('estado');
+
+                if (busqueda_producto !== '' && !codigo.includes(busqueda_producto) && !nombre.includes(busqueda_producto)) {
+                    $(this).hide();
+                    return;
+                }
+                if (filtro_productos =='1' && activo !== 1) {
+                    $(this).hide();
+                    return;
+                }
+                if (filtro_productos =='0' && activo !== 0) {
+                    $(this).hide();
+                    return;
+                }
+                $(this).show();
+                resultado = true;
+
+                if (resultado){
+                    $('#no_encontrado_productos').addClass('d-none');
+                } else {
+                    $('#no_encontrado_productos').removeClass('d-none');
+                }
+
             });
+
+
+
+        }
+        $("#search_productos").on("input", function() {
+            filtrarProductos();
+        });
+
+        $("#filtro_estado_productos").on("change", function() {
+            filtrarProductos();
         });
 
         cargarProductos();

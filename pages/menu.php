@@ -111,6 +111,7 @@ $nombre_tienda = $fila_t['nombre_tienda'];
 
             <!-- TOPBAR -->
             <nav class="navbar navbar-superior px-4">
+                <!--
                 <div class="btn-group me-auto">
                     <button type="button" class="btn text-white bg-white bg-opacity-10">
                         Abarrotes López
@@ -124,7 +125,7 @@ $nombre_tienda = $fila_t['nombre_tienda'];
                             </li>
                         </ul>
                     </div>
-                </div>
+                </div>-->
 
                 <div class="btn-group ms-auto">
                     <button type="button" class="btn text-white bg-white bg-opacity-10">

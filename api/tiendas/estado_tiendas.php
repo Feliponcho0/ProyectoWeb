@@ -11,7 +11,7 @@ $cons->bind_param("i", $id);
 if ($cons->execute()) {
     echo json_encode(["ok" => true]);
 } else {
-    echo json_encode(["ok" => false, "msg" => "Error al cambiar el estatus"]);
+    echo json_encode(["ok" => false, "msg" => "Error al cambiar el estado"]);
 }
 
 ?>

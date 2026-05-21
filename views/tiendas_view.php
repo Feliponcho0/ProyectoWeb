@@ -15,7 +15,7 @@
             <input id="search_tiendas" class="form-control border-1" type="search" placeholder="Buscar tienda...">
         </div>
 
-        <select id="filtro_estatus" class="form-select border border-primary w-auto">
+        <select id="filtro_estado" class="form-select border border-primary w-auto">
             <option value="">Todas las tiendas</option>
             <option value="1" selected>Activas</option>
             <option value="0">Inactivas</option>
@@ -157,22 +157,22 @@
                         let html = ''; 
 
                         data.forEach(t => {
-                            let estatusClaseFiltro;
-                            let estatusTexto;
-                            let estatusClaseBtn;
+                            let estadoClaseFiltro;
+                            let estadoTexto;
+                            let estadoClaseBtn;
 
-                            if (t.activo == 1) {
-                                estatusClaseFiltro = 'tienda-activa activa';
-                                estatusTexto = 'Activa';
-                                estatusClaseBtn = 'btn-success';
-                            } else {
-                                estatusClaseFiltro = 'tienda-inactiva';
-                                estatusTexto = 'Inactiva';
-                                estatusClaseBtn = 'btn-danger';
+                            if (t.activo==1) {
+                                estadoClaseFiltro = 'tienda-activa activa';
+                                estadoTexto = 'Activa';
+                                estadoClaseBtn = 'btn-success';
+                            } else{
+                                estadoClaseFiltro = 'tienda-inactiva';
+                                estadoTexto = 'Inactiva';
+                                estadoClaseBtn = 'btn-danger';
                             }
 
                             html += `
-                            <div class="col-md-4 tarjeta_tienda ${estatusClaseFiltro}">
+                            <div class="col-md-4 tarjeta_tienda ${estadoClaseFiltro}">
                                 <div class="card shadow-sm mb-3 border-primary">
                                     <div class="card-body">
                                         <div class="d-flex align-items-center mb-2">
@@ -187,8 +187,8 @@
                                         <p class="mb-1 small"><strong>Dirección:</strong> ${t.direccion}</p>
                                         <p class="mb-3 small"><strong>Teléfono:</strong> ${t.telefono}</p>
                                         <div class="d-flex justify-content-between">
-                                            <button class="btn ${estatusClaseBtn} btn-sm btn_cambiar_estatus" data-id="${t.tiendas_id}" data-nombre="${t.nombre_tienda}" data-status="${t.activo}">
-                                                ${estatusTexto}
+                                            <button class="btn ${estadoClaseBtn} btn-sm btn_cambiar_estado" data-id="${t.tiendas_id}" data-nombre="${t.nombre_tienda}" data-estado="${t.activo}">
+                                                ${estadoTexto}
                                             </button>
                                             <button class="btn btn-primary btn-sm btn_abrir_editar" data-id="${t.tiendas_id}">
                                                 Editar
@@ -252,7 +252,11 @@
                 e.preventDefault();
 
                 $.post('../api/tiendas/update_tienda.php', $(this).serialize(), function(resp) {
-                    try {resp = JSON.parse(resp);} catch(e) {resp = {ok: false, msg: 'Error al actualizar tienda'};}
+                    try {
+                        resp = JSON.parse(resp);  
+                    } catch(e) {
+                        resp = {ok: false, msg: 'Error al actualizar tienda'};
+                    }
 
                     if (!resp.ok) {
                         showAlert('danger', resp.msg || 'Error al editar la tienda');
@@ -262,18 +266,16 @@
                     modalEditarTienda.hide();
                     showAlert('success', 'Tienda actualizada correctamente');   
                     cargarTiendas(); 
-
                 });
             });
 
-        $(document).on('click', '.btn_cambiar_estatus', function() {
+        $(document).on('click', '.btn_cambiar_estado', function() {
             const id = $(this).data('id');
-            console.log("ID capturado:", id); 
             const nombre = $(this).data('nombre');
-            const estatusActual = $(this).data('status'); 
+            const estadoActual = $(this).data('estado'); 
 
             Swal.fire({
-                title: (estatusActual == 1) ? `¿Desactivar ${nombre}?` : `¿Activar ${nombre}?`,
+                title: (estadoActual == 1) ? `¿Desactivar ${nombre}?` : `¿Activar ${nombre}?`,
                 icon: "warning",
                 showCancelButton: true,
                 confirmButtonColor:"#22b043",
@@ -283,12 +285,12 @@
             }).then((result) => {
                 if (result.isConfirmed) {   
                     console.log("Enviando ID:", id);
-                    $.post('../api/tiendas/estatus_tiendas.php', { tiendas_id: id }, function(resp) {
+                    $.post('../api/tiendas/estado_tiendas.php', { tiendas_id: id }, function(resp) {
                         const res = JSON.parse(resp);
                         
                         if (res.ok) {
-                            Swal.fire("¡Listo!", "Estatus actualizado", "success");
-                            cargarTiendas(); 
+                            Swal.fire("¡Listo!", "Estado actualizado", "success");
+                            cargarTiendas();
                         } else {
                             Swal.fire("Error", "No se pudo cambiar", "error");
                         }
@@ -315,7 +317,7 @@
         // funcion de busqueda y filtros
         function filtrarTiendas() {
             const busqueda_tiendas = $("#search_tiendas").val().toLowerCase();
-            const filtro_tiendas = $("#filtro_estatus").val();
+            const filtro_tiendas = $("#filtro_estado").val();
             let resultado=false;
 
             $(".tarjeta_tienda").each(function (){
@@ -355,7 +357,7 @@
         });
 
         // Filtrar los activos y inactivos
-        $("#filtro_estatus").on("change", function() {
+        $("#filtro_estado").on("change", function() {
             filtrarTiendas();
         });
 

@@ -21,10 +21,6 @@
                 </ul>
             </div>
         </form>   
-        <div>
-            <label>Selecciona rango:</label>
-            <input type="text" id="rango" class="">
-        </div>
     </div> 
 
 </div>
