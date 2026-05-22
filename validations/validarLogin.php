@@ -1,8 +1,10 @@
 <?php
     require_once 'check.php'; 
     require_once 'conection.php';
+
     $nombre_usuario = $_POST['nombre_usuario'] ?? '';
     $contra = $_POST['password'] ?? '';
+    
     $query = "SELECT usuarios_id, rol, tiendas_id, password, activo FROM usuarios WHERE nombre_usuario = ?";
     $stmt = $conn->prepare($query);
     $stmt->bind_param("s", $nombre_usuario);

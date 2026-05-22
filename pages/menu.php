@@ -108,8 +108,14 @@
                     <a href="perfil.php" class="nav-link d-flex gap-2">
                         <i class="bi bi-person-circle fs-2"></i>
                         <div>
-                            <span class="mt-1 d-block">Samuel Santos</span>
-                            <small class="d-block">Administrador</small>
+                            <span class="mt-1 d-block">
+                                <?php echo $nombre_usuario; ?>
+                            </span>
+                            <small class="d-block">
+                                <span>
+                                    <?php echo $rol_usuario; ?>
+                                </span>
+                            </small>
                         </div>
                     </a>
                 </nav>

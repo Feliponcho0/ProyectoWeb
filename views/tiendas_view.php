@@ -19,11 +19,10 @@
             <option value="">Todas las tiendas</option>
             <option value="1" selected>Activas</option>
             <option value="0">Inactivas</option>
-        </select>   
+        </select>  
     </div>
 
     <div id="alertBox"></div>
-
     <div class="row mt-3" id="contenedor_tiendas"></div>
 </div>
 <!-- Modal agregar tienda -->

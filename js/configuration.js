@@ -93,3 +93,5 @@ document.querySelectorAll('.filtroT').forEach(item => {
         document.getElementById('nuevoNombre').value = "";
         document.getElementById('nuevoRFC').value = "";
     }
+
+    
