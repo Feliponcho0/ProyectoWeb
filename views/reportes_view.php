@@ -9,19 +9,5 @@
         </div>
     </div>
 
-    <div class="mt-3 d-flex">
-        <form action="#" method="">
-            <div class="dropdown">
-                <button class="btn btn-light border border-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    Todas las categorías
-                </button>
-                <ul class="dropdown-menu shadow">
-                    <li><a class="dropdown-item" href="#">Alimentos</a></li>
-                    <li><a class="dropdown-item" href="#">Bebidas</a></li>
-                </ul>
-            </div>
-        </form>   
-    </div> 
-
 </div>
 

@@ -61,59 +61,69 @@
                         <img class="logo" src="../img/logocore2.png" alt="Logo_CORE">
                     </a>
                 </div>
-
                 <nav class="sidebar d-flex flex-column nav nav-pills p-2 gap-1">
                     <hr class="my-2 border border-1 border-black mx-2 mt-3">
-                    <small>
-                        PRINCIPAL
-                    </small>
-                    <a id = "dashboard" href="dashboard.php" class="nav-link d-flex gap-2">
-                        <i class="bi bi-columns-gap"></i>
-                        Dashboard
+                    
+                    <small>PRINCIPAL</small>
+                    <?php if ($rol_usuario === 'Administrador' || $rol_usuario === 'Gerente' || $rol_usuario === 'Cajero'): ?>
+                    <a id="dashboard" href="dashboard.php" class="nav-link d-flex gap-2">
+                        <i class="bi bi-columns-gap"></i> Dashboard
                     </a>
-                    <a id = "punto_venta" href="punto_venta.php" class="nav-link d-flex gap-2">
-                        <i class="bi bi-laptop"></i>
-                        Punto de Venta
-                    </a>
-                    <a id = "corte_caja" href="corte_caja.php" class="nav-link d-flex gap-2">
-                        <i class="bi bi-cash-stack"></i>
-                        Corte de Caja
-                    </a>
+                    <?php endif; ?>
 
-                    <small>GESTIÓN</small>
-                    <a id = "inventario" href="inventario.php" class="nav-link d-flex gap-2">
-                        <i class="bi bi-box-seam"></i>
-                        Inventario
+                    <?php if ($rol_usuario === 'Gerente' || $rol_usuario === 'Cajero'): ?>
+                    <a id="punto_venta" href="punto_venta.php" class="nav-link d-flex gap-2">
+                        <i class="bi bi-laptop"></i> Punto de Venta
                     </a>
-                    <a id = "usuarios" href="usuarios.php" class="nav-link d-flex gap-2">
-                        <i class="bi bi-people"></i>
-                        Usuarios
-                    </a>
-                    <a id = "tiendas" href="tiendas.php" class="nav-link d-flex gap-2">
-                        <i class="bi bi-shop"></i>
-                        Tiendas
-                    </a>
-                    <a id = "reportes" href="reportes.php" class="nav-link d-flex gap-2">
-                        <i class="bi bi-file-earmark-bar-graph"></i>
-                        Reportes
-                    </a>
+                    <?php endif; ?>
 
+                    <?php if ($rol_usuario === 'Gerente'): ?>
+                    <a id="corte_caja" href="corte_caja.php" class="nav-link d-flex gap-2">
+                        <i class="bi bi-cash-stack"></i> Corte de Caja
+                    </a>
+                    <?php endif; ?>
+
+                    <?php if ($rol_usuario === 'Gerente'): ?>
+                    <small>GESTIÓN OPERATIVA</small>
+                    <a id="inventario" href="inventario.php" class="nav-link d-flex gap-2">
+                        <i class="bi bi-box-seam"></i> Inventario
+                    </a>
+                    <a id="reportes" href="reportes.php" class="nav-link d-flex gap-2">
+                        <i class="bi bi-file-earmark-bar-graph"></i> Reportes
+                    </a>
+                    <a id="usuarios" href="usuarios.php" class="nav-link d-flex gap-2">
+                        <i class="bi bi-people"></i> Gestionar Cajeros
+                    </a>
+                    <?php endif; ?>
+
+                    <?php if ($rol_usuario === 'Administrador'): ?>
+                    <small>GESTIÓN ADMINISTRATIVA</small>
+                    <a id="usuarios" href="usuarios.php" class="nav-link d-flex gap-2">
+                        <i class="bi bi-people"></i> Usuarios
+                    </a>
+                    <a id="tiendas" href="tiendas.php" class="nav-link d-flex gap-2">
+                        <i class="bi bi-shop"></i> Tiendas
+                    </a>
+                    <?php endif; ?>
+
+                    <?php if ($rol_usuario === 'Administrador' || $rol_usuario === 'Gerente'): ?>
                     <small>SISTEMA</small>
                     <a href="configuracion.php" class="nav-link d-flex gap-2">
-                        <i class="bi bi-gear"></i>
-                        Configuración
+                        <i class="bi bi-gear"></i> Configuración
                     </a>
+                    <?php endif; ?>
 
                     <hr class="my-2 border border-1 border-black mx-2">
+                    
                     <a href="perfil.php" class="nav-link d-flex gap-2">
                         <i class="bi bi-person-circle fs-2"></i>
                         <div>
                             <span class="mt-1 d-block">
-                                <?php echo $nombre_usuario; ?>
+                                <?php echo htmlspecialchars($nombre_usuario); ?>
                             </span>
                             <small class="d-block">
                                 <span>
-                                    <?php echo $rol_usuario; ?>
+                                    <?php echo htmlspecialchars($rol_usuario); ?>
                                 </span>
                             </small>
                         </div>
@@ -126,28 +136,9 @@
 
             <!-- TOPBAR -->
             <nav class="navbar navbar-superior px-4">
-                <div class="btn-group me-auto">
-                    <button type="button" class="btn text-white bg-white bg-opacity-10">
-                        <?php echo htmlspecialchars($nombre_tienda); ?>
-                    </button>
-                    <!-- Solo mostrar el dropdown para cambiar tienda si NO es admin -->
-                    <?php if ($rol_usuario !== 'Administrador'): ?>
-                    <button type="button" class="btn text-white bg-white bg-opacity-10 dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown">
-                    </button>
-                    <div id="add">
-                        <ul class="dropdown-menu shadow p-1 border-1">
-                            <!-- Aquí puedes cargar las tiendas disponibles para cambiar -->
-                            <li class="dropdown-item" type="button">
-                                <?php echo htmlspecialchars($nombre_tienda); ?>
-                            </li>
-                        </ul>
-                    </div>
-                    <?php endif; ?>
-                </div>
-
                 <div class="btn-group ms-auto">
                     <button type="button" class="btn text-white bg-white bg-opacity-10">
-                        Samuel Santos
+                        <?php echo htmlspecialchars($nombre_usuario); ?>
                     </button>
                     <button type="button" class="btn text-white bg-white bg-opacity-10 dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown">
                     </button>
@@ -156,9 +147,9 @@
                             <div class="d-flex align-items-center p-1 gap-1">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 12a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"/><path d="M9 10a3 3 0 1 0 6 0a3 3 0 1 0 -6 0"/><path d="M6.168 18.849a4 4 0 0 1 3.832 -2.849h4a4 4 0 0 1 3.834 2.855"/></svg>
                                 <div>
-                                    <strong class="tipoLetra d-block">Samuel Santos</strong>
-                                    <small class="text-light d-block">samuel@gmail.com</small>
-                                    <span class="badge bg-primary rounded-5">Administrador</span>
+                                    <strong class="tipoLetra d-block"><?php echo htmlspecialchars($nombre_usuario); ?></strong>
+                                    <small class="text-light d-block"><?php echo htmlspecialchars($correo_usuario); ?></small>
+                                    <span class="badge bg-primary rounded-5"><?php echo htmlspecialchars($rol_usuario); ?></span>
                                 </div>
                             </div>
                         </li>
@@ -171,15 +162,7 @@
                                 </div>
                             </a>
                         </li>
-                        <li>
-                            <a href="#" class="dropdown-item d-flex align-items-center p-2 mb-2 ps-3 gap-2">
-                                <i class="bi bi-shop fs-3"></i>
-                                <div>
-                                    <strong class="tipoLetra d-block">Cambiar tienda</strong>
-                                    <small class="text-muted d-block">Elige tu tienda</small>
-                                </div>
-                            </a>
-                        </li>
+
                         <li><hr class="mt-1 mb-1"></li>
                         <li>
                             <a href="../index.html" class="dropdown-item d-flex align-items-center text-danger p-2 mb-2 ps-3 gap-2">

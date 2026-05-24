@@ -5,7 +5,7 @@
     $nombre_usuario = $_POST['nombre_usuario'] ?? '';
     $contra = $_POST['password'] ?? '';
     
-    $query = "SELECT usuarios_id, rol, tiendas_id, password, activo FROM usuarios WHERE nombre_usuario = ?";
+    $query = "SELECT usuarios_id, rol, tiendas_id, password, correo, activo FROM usuarios WHERE nombre_usuario = ?";
     $stmt = $conn->prepare($query);
     $stmt->bind_param("s", $nombre_usuario);
     $stmt->execute();
@@ -23,6 +23,8 @@
             $_SESSION['id_usuario'] = $fila['usuarios_id'];
             $_SESSION['rol'] = $fila['rol'];
             $_SESSION['tiendas_id'] = $fila['tiendas_id']; // Puede ser NULL para admin
+            $_SESSION['nombre_usuario'] = $nombre_usuario;
+            $_SESSION['correo'] = $fila['correo'];
             
             // Redirigir según el rol
             if ($fila['rol'] === 'Administrador') {

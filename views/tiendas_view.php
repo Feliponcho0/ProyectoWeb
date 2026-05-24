@@ -39,33 +39,64 @@
             <form id="form_agregar_tienda" method="POST">
                 <div class="modal-body">
                     <div class="row">
-                        <div class="col-md-6">
+                        <div class="col-md-12">
                             <h2 class="small">Nombre de la tienda</h2>
                             <div class="mb-3">
-                                <input type="text" name="nombre_tienda" class="form-control" placeholder="Nombre" minlength="2" maxlength="100" required>
+                                <input type="text" name="nombre_tienda" class="form-control border-primary" placeholder="Nombre" minlength="2" maxlength="100" required>
                             </div>
                         </div>
-
+                    </div>
+                    <div class="row">
                         <div class="col-md-6">
                             <h2 class="small">RFC</h2>
                             <div class="mb-3">
-                                <input type="text" name="rfc" class="form-control" placeholder="RFC" minlength="13" maxlength="13" required>
+                                <input type="text" name="rfc" class="form-control border-primary" placeholder="RFC"
+                                pattern="^[A-ZÑ&]{3,4}\d{2}(?:0[1-9]|1[0-2])(?:0[1-9]|[12]\d|3[01])[A-Z\d]{3}$" title="Escribe un RFC válido." required style="text-transform: uppercase;">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <h2 class="small">Teléfono</h2>
+                            <div class="mb-3">
+                                <input type="text" name="telefono" class="form-control border-primary" placeholder="Teléfono" 
+                                pattern="[0-9]{10}" title="Escribe un número de teléfono válido." required>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <hr class="mt-4">
+                    <h6 class="fw-bold mb-3" style="color: #1A2B4A">Dirección de negocio</h6>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h2 class="small">Código Postal</h2>
+                            <div class="mb-3">
+                                <input type="text" name="codigo_postal" class="form-control border-primary" placeholder="Ej. 23600" pattern="[0-9]{5}" title="Debe contener exactamente 5 números" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <h2 class="small">Estado</h2>
+                            <div class="mb-3">
+                                <select id="tienda_estado" name="estado" class="form-select border-primary" required>
+                                    <option value="" selected disabled>Selecciona un estado...</option>
+                                </select>
                             </div>
                         </div>
                     </div>
 
-                    <div class="row mt-3">
-                        <div class="col-md-6">
-                            <h2 class="small">Dirección</h2>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h2 class="small">Colonia</h2>
                             <div class="mb-3">
-                                <input type="text" name="direccion" class="form-control" placeholder="Dirección" minlength="5" maxlength="50" required>
+                                <input type="text" name="colonia" class="form-control border-primary" placeholder="Ej. Centro" minlength="3" required>
                             </div>
                         </div>
+                    </div>
 
-                        <div class="col-md-6">
-                            <h2 class="small">Telefono</h2>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h2 class="small">Calle y Número</h2>
                             <div class="mb-3">
-                                <input type="text" name="telefono" class="form-control" placeholder="Teléfono" minlength="10" maxlength="15" required>
+                                <input type="text" name="calle" class="form-control border-primary" placeholder="Ej. Av. Juárez #123" minlength="4" required>
                             </div>
                         </div>
                     </div>
@@ -89,47 +120,77 @@
                 </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form id="form_editar_tienda">
+            <form id="form_editar_tienda" method="POST">
                 <div class="modal-body">
                     <input type="hidden" name="id_edit" id="id_edit">
 
                     <div class="row">
-                        <div class="col-md-6">
+                        <div class="col-md-12">
                             <h2 class="small">Nombre de la tienda</h2>
                             <div class="mb-3">
-                                <input type="text" id="edit_nombre_tienda" name="nombre_tienda" class="form-control" minlength="2" maxlength="100" required>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <h2 class="small">RFC</h2>
-                            <div class="mb-3">
-                                <input type="text" id="edit_rfc" name="rfc" class="form-control" minlength="13" maxlength="13" required>
+                                <input type="text" id="edit_nombre_tienda" name="nombre_tienda" class="form-control border-primary" minlength="2" maxlength="100" required>
                             </div>
                         </div>
                     </div>
 
-                    <div class="row mt-3">
+                    <div class="row">
                         <div class="col-md-6">
-                            <h2 class="small">Dirección</h2>
+                            <h2 class="small">RFC</h2>
                             <div class="mb-3">
-                                <input type="text" id="edit_direccion" name="direccion" class="form-control" minlength="5" maxlength="50" required>
+                                <input type="text" id="edit_rfc" name="rfc" class="form-control border-primary"
+                                pattern="^[A-ZÑ&]{3,4}\d{2}(?:0[1-9]|1[0-2])(?:0[1-9]|[12]\d|3[01])[A-Z\d]{3}$" title="Escribe un RFC válido" required style="text-transform: uppercase;">
                             </div>
                         </div>
                         <div class="col-md-6">
                             <h2 class="small">Teléfono</h2>
                             <div class="mb-3">
-                                <input type="text" id="edit_telefono" name="telefono" class="form-control" minlength="10" maxlength="15" required>
+                                <input type="text" id="edit_telefono" name="telefono" class="form-control border-primary"
+                                pattern="[0-9]{10}" title="Escribe un número de teléfono válido" required>
                             </div>
                         </div>
                     </div>
-                    <div class="modal-footer gap-3">
-                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">
-                            Cancelar
-                        </button>
-                        <button type="submit" class="btn btn-primary">
-                            Guardar cambios
-                        </button>
+
+                    <hr class="mt-4">
+                    <h6 class="fw-bold mb-3" style="color: #1A2B4A">Dirección de negocio</h6>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h2 class="small">Código Postal</h2>
+                            <div class="mb-3">
+                                <input type="text" id="edit_codigo_postal" name="codigo_postal" class="form-control border-primary" pattern="[0-9]{5}" title="Debe contener exactamente 5 números" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <h2 class="small">Estado</h2>
+                            <div class="mb-3">
+                                <select id="edit_estado" name="estado" class="form-select border-primary" required>
+                                    <option value="" selected disabled hidden>Selecciona un estado...</option>
+                                </select>
+                            </div>
+                        </div>
                     </div>
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h2 class="small">Colonia</h2>
+                            <div class="mb-3">
+                                <input type="text" id="edit_colonia" name="colonia" class="form-control border-primary" placeholder="Ej. Centro" minlength="3" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h2 class="small">Calle y Número</h2>
+                            <div class="mb-3">
+                                <input type="text" id="edit_calle" name="calle" class="form-control border-primary" minlength="4" required>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer gap-3">
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Guardar cambios</button>
                 </div>
             </form>
         </div>
@@ -143,6 +204,29 @@
         const modalAgregarTienda = new bootstrap.Modal(document.getElementById('modal_agregar_tienda'));
         const modalEditarTienda = new bootstrap.Modal(document.getElementById('modal_editar_tienda'));
 
+        //Estados de la republica para los select de agregar y editar
+        const estadosMexico = [
+            "Aguascalientes", "Baja California", "Baja California Sur", "Campeche", "Chiapas", 
+            "Chihuahua", "Coahuila", "Colima", "Ciudad de México", "Durango", "Guanajuato", 
+            "Guerrero", "Hidalgo", "Jalisco", "México", "Michoacán", "Morelos", "Nayarit", 
+            "Nuevo León", "Oaxaca", "Puebla", "Querétaro", "Quintana Roo", "San Luis Potosí", 
+            "Sinaloa", "Sonora", "Tabasco", "Tamaulipas", "Tlaxcala", "Veracruz", "Yucatán", "Zacatecas"
+        ];
+
+        let opcionesEstados = '<option value="" selected disabled hidden>Selecciona un estado...</option>'; 
+
+        estadosMexico.forEach(estado => {
+            opcionesEstados += `<option value="${estado}">${estado}</option>`;
+        });
+
+        $('#tienda_estado').html(opcionesEstados);
+        $('#edit_estado').html(opcionesEstados);
+
+        // Agregar mensaje de "No se encontraron tiendas" si no existe
+        if ($("#no_encontrado").length === 0) {
+            $("#contenedor_tiendas").after('<div id="no_encontrado" class="text-center mt-4 d-none"><h1 class="fs-4 text-muted">No se encontraron tiendas que coincidan con los filtros</h1></div>');
+        }
+        
         // Abrir modal agregar
         $("#btn_agregar_tienda").click(function () {
             $("#form_agregar_tienda")[0].reset(); // Limpiar antes de abrir
@@ -183,7 +267,8 @@
                                             </div>
                                         </div>
                                         <p class="mb-1 small"><strong>RFC:</strong> ${t.rfc}</p>
-                                        <p class="mb-1 small"><strong>Dirección:</strong> ${t.direccion}</p>
+                                        <p class="mb-1 small"><strong>Calle:</strong> ${t.calle}</p>
+                                        <p class="mb-1 small"><strong>Colonia:</strong> ${t.colonia}</p>
                                         <p class="mb-3 small"><strong>Teléfono:</strong> ${t.telefono}</p>
                                         <div class="d-flex justify-content-between">
                                             <button class="btn ${estadoClaseBtn} btn-sm btn_cambiar_estado" data-id="${t.tiendas_id}" data-nombre="${t.nombre_tienda}" data-estado="${t.activo}">
@@ -199,9 +284,6 @@
                         });
                         $('#contenedor_tiendas').html(html);
                         filtrarTiendas();
-                        if (data.length == 0) {
-                            $('#contenedor_tiendas').html('<h1 class="text-center mt-2 fs-3">No hay tiendas registradas</h1>');
-                        }
                     }
                 });
             }
@@ -238,8 +320,12 @@
                     $('#id_edit').val(t.tiendas_id); 
                     $('#edit_nombre_tienda').val(t.nombre_tienda);
                     $('#edit_rfc').val(t.rfc);
-                    $('#edit_direccion').val(t.direccion);
+                    $('#edit_codigo_postal').val(t.codigo_postal); 
+                    $('#edit_calle').val(t.calle);
+                    $('#edit_estado').val(t.estado);
                     $('#edit_telefono').val(t.telefono);
+                    $('#edit_colonia').val(t.colonia);
+
 
                     modalEditarTienda.show();
                     //$('#modal_editar_tienda').modal('show');
@@ -297,7 +383,6 @@
                 }
             });
         });
-            
 
         //Funcion para mostrar alertas
         function showAlert(type, msg){

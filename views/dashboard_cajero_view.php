@@ -3,8 +3,10 @@
         <div class="col-12">
             <div class="card shadow-sm border-0 bg-light p-4">
                 <h1 class="tipoLetra fw-bold fs-3">
-                    Bienvenido 
-                    <span>ADMINISTRADOR</span>
+                    Bienvenido cajero a
+                    <span>
+                        <?php echo $nombre_tienda; ?>
+                    </span>
                 </h1>
             </div>
         </div>
