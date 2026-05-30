@@ -84,7 +84,7 @@
                     <?php endif; ?>
 
                     <?php if ($rol_usuario === 'Gerente'): ?>
-                    <small>GESTIÓN OPERATIVA</small>
+                    <small>GESTIÓN</small>
                     <a id="inventario" href="inventario.php" class="nav-link d-flex gap-2">
                         <i class="bi bi-box-seam"></i> Inventario
                     </a>
@@ -97,7 +97,7 @@
                     <?php endif; ?>
 
                     <?php if ($rol_usuario === 'Administrador'): ?>
-                    <small>GESTIÓN ADMINISTRATIVA</small>
+                    <small>GESTIÓN</small>
                     <a id="usuarios" href="usuarios.php" class="nav-link d-flex gap-2">
                         <i class="bi bi-people"></i> Usuarios
                     </a>
@@ -179,7 +179,7 @@
 
             <!-- Contenido de las paginas -->
             <div id = "contenido" class="p-4">
-                <?php include $pagina; ?>
+                <?php include $pagina;?>
             </div>
 
         </div>

@@ -260,7 +260,7 @@
                                     <div class="card-body">
                                         <div class="d-flex align-items-center mb-2">
                                             <div class="p-0">
-                                                <i class="bi bi-shop fs-3" style="color: #1A2B4A"></i>
+                                                <i class="bi bi-shop fs-3"></i>
                                             </div>
                                             <div class="ms-3">
                                                 <h3 class="h6 fw-bold mb-0">${t.nombre_tienda}</h3>
@@ -391,12 +391,7 @@
                     ${msg} 
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>`
-            )
-            //Se oculta la alerta
-            setTimeout(() => {
-                $("#alertBox").html("");
-            }, 3000);
-        }
+            )}
         
         // funcion de busqueda y filtros
         function filtrarTiendas() {
@@ -419,7 +414,7 @@
                 }
     
                 if (filtro_tiendas=="0" && activo){
-                    $(this ).hide();
+                    $(this).hide();
                     return;
                 }
 

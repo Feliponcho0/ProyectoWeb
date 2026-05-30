@@ -2,10 +2,12 @@
 <div class="pb-2 mb-0">
     <div class="d-flex justify-content-between">
         <h1 class="tipoLetra fw-semibold pb-2 fs-4">Inventario</h1>
-        <button id="btn_agregar_producto" class="boton-azul-hover btn bg-primary me-2 text-white">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="#FFFFFF" class="icon icon-tabler icons-tabler-filled icon-tabler-plus"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M12 4a1 1 0 0 1 1 1v6h6a1 1 0 0 1 0 2h-6v6a1 1 0 0 1 -2 0v-6h-6a1 1 0 0 1 0 -2h6v-6a1 1 0 0 1 1 -1" /></svg>
-            Agregar Producto
-        </button>
+        <div>
+            <button id="btn_agregar_producto" class="boton-azul-hover btn bg-primary me-2 text-white">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="#FFFFFF" class="icon icon-tabler icons-tabler-filled icon-tabler-plus"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M12 4a1 1 0 0 1 1 1v6h6a1 1 0 0 1 0 2h-6v6a1 1 0 0 1 -2 0v-6h-6a1 1 0 0 1 0 -2h6v-6a1 1 0 0 1 1 -1" /></svg>
+                Agregar Producto
+            </button>
+        </div>
     </div>
     <div class="d-flex gap-2 mb-4">
         <div class="input-group border border-primary rounded w-50">
@@ -48,6 +50,7 @@
             </div>
         </div>
     </div>
+
 </div>
     <!-- Modal agregar producto -->
     <div class="modal fade" tabindex="-1" aria-hidden="true" id="modal_agregar_producto">
@@ -100,6 +103,18 @@
                                 </div>
                             </div>
                         </div>
+                        <!--
+                        <div class="row mt-3">
+                            <div class="col-md-6">
+
+                                <h2 class="small">Imagen del producto</h2>
+                                <form id="form_agregar_producto" method="POST" enctype="multipart/form-data">
+                                    <div class="mb-3">
+                                        <input type="file" name="imagen" accept="image/*" required>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>-->
                     </div>
                     <div class="modal-footer gap-3">
                         <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancelar</button>
@@ -238,7 +253,7 @@
 
         // Agrega producto con el evento 
         $('#codigoProd').on('keypress', function(e) {
-            if (e.which === 13) { 
+            if (e.which === 13) { //enter
                 e.preventDefault();
                 $('#form_agregar_producto [name="nombre"]').focus();
             }
@@ -328,39 +343,30 @@
         function filtrarProductos() {
             const busqueda_producto = $('#search_productos').val().toLowerCase();
             const filtro_productos = $('#filtro_estado_productos').val();
-            let resultado= false
+            let hayCoincidencias= false
 
             $('#contenedor_productos tr').each(function() {
-                const codigo= $(this).find('td').eq(0).text().toLowerCase();
-                const nombre = $(this).find('td').eq(1).text().toLowerCase();
+                const codigo= $(this).find('td').eq(0).text().toLowerCase();// codigo
+                const nombre = $(this).find('td').eq(1).text().toLowerCase();// nombre
                 const activo = $(this).find('.btn_cambiar_estado').data('estado');
 
-                if (busqueda_producto !== '' && !codigo.includes(busqueda_producto) && !nombre.includes(busqueda_producto)) {
-                    $(this).hide();
-                    return;
-                }
-                if (filtro_productos =='1' && activo !== 1) {
-                    $(this).hide();
-                    return;
-                }
-                if (filtro_productos =='0' && activo !== 0) {
-                    $(this).hide();
-                    return;
-                }
-                $(this).show();
-                resultado = true;
+                const coincideTexto = (busqueda_producto ==='' || codigo.includes(busqueda_producto) || nombre.includes(busqueda_producto));
+                const coincideEstado = (filtro_productos === '' || activo == filtro_productos);
 
-                if (resultado){
-                    $('#no_encontrado_productos').addClass('d-none');
-                } else {
-                    $('#no_encontrado_productos').removeClass('d-none');
+                if(coincideTexto && coincideEstado){
+                    $(this).show();
+                    hayCoincidencias = true;
+                } else{
+                    $(this).hide();
                 }
-
             });
-
-
-
+            if (hayCoincidencias){
+                $('#no_encontrado_productos').addClass('d-none');
+            } else {
+                $('#no_encontrado_productos').removeClass('d-none');
+            }
         }
+
         $("#search_productos").on("input", function() {
             filtrarProductos();
         });
