@@ -92,7 +92,7 @@
                         <i class="bi bi-file-earmark-bar-graph"></i> Reportes
                     </a>
                     <a id="usuarios" href="usuarios.php" class="nav-link d-flex gap-2">
-                        <i class="bi bi-people"></i> Gestionar Cajeros
+                        <i class="bi bi-people"></i> Usuarios
                     </a>
                     <?php endif; ?>
 

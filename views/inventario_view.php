@@ -266,7 +266,7 @@
         // Obtener datos para editar producto
         $(document).on('click', '.btn_editar', function() {
             const id = $(this).data('id');
-            $.getJSON('../api/inventario/get_producto.php', { id: id }, function(resp) {
+            $.getJSON('../api/inventario/get_producto.php', {id:id}, function(resp) {
                 if (resp.ok){
                     const p = resp.data;
                     $('#editar_id').val(p.producto_id);
@@ -285,7 +285,7 @@
             e.preventDefault();
             $.post('../api/inventario/update_producto.php', $(this).serialize(), function(resp) {
                 try { 
-                    resp = JSON.parse(resp); 
+                    resp =JSON.parse(resp); 
                 } catch(e) { 
                     resp = {ok: false, msg: 'Error al actualizar producto'}; 
                 }
