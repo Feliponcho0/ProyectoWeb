@@ -185,7 +185,7 @@
         const modaledit = new bootstrap.Modal(document.getElementById('modal_editar_producto'));
 
         $('#btn_agregar_producto').click(function() {
-            $('#form_agregar_producto')[0].reset();
+            $('#form_agregar_producto')[0].reset();//resetea el formulario
             modalAgregar.show();
         });
 

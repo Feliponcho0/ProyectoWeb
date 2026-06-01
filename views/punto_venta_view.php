@@ -29,6 +29,7 @@
                             <th>NOMBRE</th>
                             <th>PRECIO</th>
                             <th>CANTIDAD</th>
+                            <th>ACCIONES</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -60,12 +61,41 @@
         $('#tabletventa tbody tr').each(function(){
             let precio =parseFloat($(this).find('.precio').text());
             let cantidad= parseInt($(this).find('.cantidad').text());
+            
             total=total+precio*cantidad;
         });
         $('#total_venta').text(total.toFixed(2));
     }
 
-    //
+    //Elimina la fila
+    $(document).on('click', '.btn_eliminar', function(){
+        let fila =$(this).closest('tr');
+        let nombre =$(fila).find('.nombre').text();
+
+        Swal.fire({
+            title: `¿Eliminar el producto ${nombre}?`,
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#22b043",
+            cancelButtonColor: "#ff0000",
+            confirmButtonText: "Sí, eliminar",
+            cancelButtonText: "Cancelar"
+        }) .then((result) => {
+            if (result.isConfirmed) {
+                $(fila).remove();
+                calcularTotalVenta();
+
+                Swal.fire({
+                    icon: "success",
+                    title: "Producto eliminado correctamente",
+                    showConfirmButton: false,
+                    timer: 1500
+                })
+            }
+        })
+    })
+
+    //Genera la venta
     $('#btn_generar_venta').click(function(){
         let productos= [];
         $('#tabletventa tbody tr').each(function(){
@@ -84,21 +114,26 @@
         }
 
         let total= $('#total_venta').text();
+
         $.post('../api/ventas/generar_venta.php',{
             productos: JSON.stringify(productos),
             total: total
         }, function(resp){
             console.log(resp);
-            try{resp=JSON.parse(resp);}catch(e){resp={ok:false, msg: 'Error al generar la venta'}}
+            
             if (resp.ok){
                 showAlert('success', 'Venta generada correctamente');
                 //limpiar carrito
                 $('#tabletventa tbody').html('');
                 $('#total_venta').text('0.00');
+
+                //abrir pdf
+                window.open('../api/ventas/ticket_pdf.php?id=' + resp.data, '_blank');
+                
             }else{
                 showAlert('danger', resp.msg || 'Error al generar la venta');
             }
-        });
+        }, 'json');
     });
 
 
@@ -139,6 +174,11 @@
                             <td class="nombre">${p.nombre_producto}</td>
                             <td class="precio">${p.precio_venta}</td>
                             <td class="cantidad">1</td>
+                            <td>
+                                <button class="btn btn-danger btn-sm btn_eliminar">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </td>
                         </tr>
                     `;
 
@@ -153,8 +193,3 @@
     });
 
 </script>
-
-
-
-
-

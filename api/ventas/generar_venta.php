@@ -73,7 +73,7 @@ try{
     }
 
     $conn->commit();
-    echo json_encode(['ok' => true, 'msg' => 'Venta generada correctamente']);
+    echo json_encode(['ok' => true, 'msg' => 'Venta generada correctamente', 'data' => $ventas_id]);
 }catch(Exception $e){
     $conn->rollback();
     echo json_encode(['ok' => false, 'msg' => 'Error al generar la venta']);

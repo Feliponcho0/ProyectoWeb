@@ -216,7 +216,7 @@
         let opcionesEstados = '<option value="" selected disabled hidden>Selecciona un estado...</option>'; 
 
         estadosMexico.forEach(estado => {
-            opcionesEstados += `<option value="${estado}">${estado}</option>`;
+            opcionesEstados= opcionesEstados+`<option value="${estado}">${estado}</option>`;
         });
 
         $('#tienda_estado').html(opcionesEstados);
