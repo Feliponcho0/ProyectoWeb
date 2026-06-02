@@ -1,7 +1,7 @@
 <?php 
     require_once "../validations/check.php"; 
     require_once "../validations/conection.php";
-    // Manejar la tienda SOLO si el usuario no es admin y tiene tienda asignada
+    verificar_usuario_activo();
     $nombre_tienda = "Sin tienda asignada"; // Valor por defecto
     
     if (isset($_SESSION['tiendas_id']) && $_SESSION['tiendas_id'] !== null && $_SESSION['tiendas_id'] > 0) {
@@ -105,14 +105,6 @@
                         <i class="bi bi-shop"></i> Tiendas
                     </a>
                     <?php endif; ?>
-
-                    <?php if ($rol_usuario === 'Administrador' || $rol_usuario === 'Gerente'): ?>
-                    <small>SISTEMA</small>
-                    <a href="configuracion.php" class="nav-link d-flex gap-2">
-                        <i class="bi bi-gear"></i> Configuración
-                    </a>
-                    <?php endif; ?>
-
                     <hr class="my-2 border border-1 border-black mx-2">
                     
                     <a href="perfil.php" class="nav-link d-flex gap-2">

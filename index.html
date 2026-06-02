@@ -14,7 +14,7 @@
     <title>Core Multistore</title>
 </head>
 
-<!-- lo siguiente es un modal de error que se muestra cuando el usuario o contraseña son inválidos, se activa con el parámetro de error en la URL -->
+<!-- modal de errores -->
 <div class="modal fade" id = "error" tabindex="-10">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -161,11 +161,27 @@
                                 </div>
                             </div>
                         </div>
+                        <!-- <a href = "#" class = "text-white" download>
+                            <p class = "small mt-3 mb-0">
+                                ¿Nesecitas saber como funciona nuestro sistema?
+                            </p>
+                        </a> -->
                     </div>
                 </div>
             </div>
         </div>
     </div>
     <script src = "js/configuration.js"></script>
+    <script>
+        const errorEnUrl = new URLSearchParams(window.location.search);
+        const error = errorEnUrl.get('error');
+        
+        if (error && (error === '1' || error === '2' || error === '3')) {
+            const errorModal = new bootstrap.Modal(document.getElementById('error'));
+            errorModal.show();
+            
+            window.history.replaceState({}, document.title, window.location.pathname);
+        }
+    </script>
 </body>
 </html>
