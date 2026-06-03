@@ -209,10 +209,25 @@
     }
 
     function cargarTiendasParaModal() {
+        
         $.getJSON("../api/tiendas/list_tiendas.php", function(resp) {
             if (resp.ok && resp.data && resp.data.length > 0) {
-                todasLasTiendas = resp.data;
-                mostrarTabla(todasLasTiendas);
+                let tiendasFiltradas = [];
+                
+                <?php if (isset($_SESSION['tiendas_id']) && $_SESSION['tiendas_id'] !== null && $_SESSION['tiendas_id'] > 0): ?>
+                    tiendasFiltradas = resp.data.filter(function(tienda) {
+                        return tienda.tiendas_id == <?php echo $_SESSION['tiendas_id']; ?>;
+                    });
+                <?php else: ?>
+                    tiendasFiltradas = resp.data;
+                <?php endif; ?>
+                
+                if (tiendasFiltradas.length > 0) {
+                    todasLasTiendas = tiendasFiltradas;
+                    mostrarTabla(todasLasTiendas);
+                } else {
+                    $('#tablaTiendas').html('<tr><td colspan="3" class="text-center text-danger">No hay tiendas disponibles para tu usuario</td></tr>');
+                }
             } else {
                 $('#tablaTiendas').html('<tr><td colspan="3" class="text-center text-danger">No hay tiendas disponibles</td></tr>');
             }
@@ -361,6 +376,16 @@
             Swal.fire('Error', 'Debe seleccionar una tienda', 'error');
             return;
         }
+
+        // loading
+        Swal.fire({
+            title: 'Agregando usuario...',
+            text: 'Por favor espere',
+            allowOutsideClick: false,
+            didOpen: () => {
+                Swal.showLoading();
+            }
+        });
         
         $.post("../api/usuarios/insertUsers.php", {
             nombre_usuario: nombre,
@@ -383,6 +408,8 @@
         }, "json").fail(function() {
             Swal.fire('Error', 'Error de conexión con el servidor', 'error');
         });
+
+        
     }
 
     $(document).ready(function() {
