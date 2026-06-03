@@ -1,3 +1,20 @@
+<?php
+    $puede_vender = true;
+    $mensaje_turno = '';
+
+    if ($_SESSION['rol'] === 'Cajero') {
+        $check_turno = $conn->prepare("SELECT corte_caja_id FROM corte_caja WHERE usuarios_id = ? AND fecha_fin IS NULL");
+        $check_turno->bind_param("i", $_SESSION['id_usuario']);
+        $check_turno->execute();
+        $result_turno = $check_turno->get_result();
+        
+        if ($result_turno->num_rows === 0) {
+            $puede_vender = false;
+            $mensaje_turno = 'No tienes un turno activo. Por favor, solicita al gerente que inicie tu turno para poder realizar ventas.';
+        }
+    }
+?>
+
 <div id="alertBox" class="mt-3"></div>
 <div class="pb-2 mb-0">
     <div class="d-flex justify-content-between">
