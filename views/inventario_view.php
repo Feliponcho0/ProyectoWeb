@@ -1,3 +1,4 @@
+
 <div id="alertBox" class="mt-3"></div>
 <div class="pb-2 mb-0">
     <div class="d-flex justify-content-between">
@@ -14,6 +15,7 @@
             <span class="input-group-text">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icon-tabler-search"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M3 10a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" /><path d="M21 21l-6 -6" /></svg>
             </span>
+            <!--Buscador -->
             <input id="search_productos" class="form-control border-1" type="search" placeholder="Buscar producto...">
         </div>
         <select id="filtro_estado_productos" class="form-select border border-primary w-auto">
@@ -184,11 +186,12 @@
         const modalAgregar = new bootstrap.Modal(document.getElementById('modal_agregar_producto'));
         const modaledit = new bootstrap.Modal(document.getElementById('modal_editar_producto'));
 
+        // Agregar producto modal
         $('#btn_agregar_producto').click(function() {
             $('#form_agregar_producto')[0].reset();//resetea el formulario
             modalAgregar.show();
         });
-
+        // Cargar productos
         function cargarProductos() {
             $.getJSON('../api/inventario/list_productos.php', function(resp) {
                 if (resp.ok){
@@ -239,7 +242,7 @@
             e.preventDefault();
             console.log("Datos enviados:", $(this).serialize());
             $.post('../api/inventario/insert_producto.php', $(this).serialize(), function(resp) {
-                console.log("Servidor dice:", resp);
+                //console.log("Servidor dice:", resp);
                 modalAgregar.hide();
                 if (resp.ok){
                     showAlert('success', 'Producto agregado correctamente.');
@@ -350,6 +353,7 @@
                 const nombre = $(this).find('td').eq(1).text().toLowerCase();// nombre
                 const activo = $(this).find('.btn_cambiar_estado').data('estado');
 
+                // Verifica si el producto coincide con la búsqueda
                 const coincideTexto = (busqueda_producto ==='' || codigo.includes(busqueda_producto) || nombre.includes(busqueda_producto));
                 const coincideEstado = (filtro_productos === '' || activo == filtro_productos);
 

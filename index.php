@@ -22,19 +22,29 @@
                 <h5 class="modal-title">Error</h5>
             </div>
             <div class="modal-body">
-                <?php if($error == 1): ?>
-                    <p class = "text-danger">
-                        Usuario o contraseña incorrectos. Por favor, inténtalo de nuevo.
-                    </p>
-                <?php elseif($error == 2): ?>
-                    <p class = "text-danger">
-                        Debes iniciar sesión para acceder a esta página.
-                    </p>
-                <?php elseif($error == 3): ?>
-                    <p class = "text-danger">
-                        No tienes permiso para acceder a esta página.
-                    </p>
-                <?php endif; ?>
+                <?php
+                    switch($error){
+                        case 1:
+                            echo '<p class="text-danger">Usuario o contraseña incorrectos. Por favor, inténtalo de nuevo.</p>';
+                            break;
+
+                        case 2:
+                            echo '<p class="text-danger">Debes iniciar sesión para acceder a esta página.</p>';
+                            break;
+
+                        case 3:
+                            echo '<p class="text-danger">No tienes permiso para acceder a esta página.</p>';
+                            break;
+
+                        case 4:
+                            echo '<p class="text-danger">Tu usuario está desactivado.</p>';
+                            break;
+
+                        case 5:
+                            echo '<p class="text-danger" style="font-size: 24px;">NO TIENES PERMITIDO ACCEDER A ESTA AREA.</p>';
+                            break;
+                    }
+                ?>
             </div>
             <div class = "modal-footer">
             <button type = "button" class = "btn btn-secondary" data-bs-dismiss="modal">
@@ -176,7 +186,7 @@
         const errorEnUrl = new URLSearchParams(window.location.search);
         const error = errorEnUrl.get('error');
         
-        if (error && (error === '1' || error === '2' || error === '3')) {
+        if (error && (error === '1' || error === '2' || error === '3' || error === '4' || error === '5')) {
             const errorModal = new bootstrap.Modal(document.getElementById('error'));
             errorModal.show();
             

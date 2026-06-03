@@ -31,8 +31,11 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
 
     <!--JQuery-->
-    <script src="../js/jquery-4.0.0.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
     <script src = "../js/configuration.js"></script>
+
+    <!--ChartJS-->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <!--sweetAlert-->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>

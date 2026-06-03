@@ -1,3 +1,4 @@
+
 <div class="pb-2 mb-0">
     <div class="d-flex justify-content-between align-items-center">
         <h1 class="tipoLetra fw-semibold pb-2 fs-4">Gestión de Tiendas</h1>

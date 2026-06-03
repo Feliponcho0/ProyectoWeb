@@ -1,8 +1,8 @@
 <?php
-    $servername = "bdzgbhzoece2npuq85jz-mysql.services.clever-cloud.com";
-    $username = "u73962dkev2xk0n9";
-    $password = "wUlj5spC069pdX720lpm";
-    $database = "bdzgbhzoece2npuq85jz";
+    $servername = "br9bm8i4ietmialfxmhz-mysql.services.clever-cloud.com";
+    $username = "umdm2bhuj1unejhw";
+    $password = "AEC1kYvZmNMyJMFPuh2a";
+    $database = "br9bm8i4ietmialfxmhz";
 
     // $servername = "sql312.infinityfree.com";
     // $username = "if0_42064577";
