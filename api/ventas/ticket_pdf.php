@@ -2,6 +2,7 @@
 require_once '../../lib/fpdf/fpdf.php';
 require_once '../../validations/conection.php';
 
+
 $id=$_GET['id'] ?? 0;
 
 try{
@@ -93,7 +94,7 @@ try{
     $pdf->Cell(70,5,'GRACIAS POR SU COMPRA',0,1,'C');
 
     //descarga
-    $pdf->Output('D', 'ticket_'.$venta['numero_ticket'].'.pdf');
+    $pdf->Output('I', 'ticket_'.$venta['numero_ticket'].'.pdf');
     exit;
 
 }catch(Exception $e){

@@ -34,8 +34,13 @@
     <script src="../js/jquery-4.0.0.js"></script>
     <script src = "../js/configuration.js"></script>
 
+    <!--ChartJS-->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
     <!--sweetAlert-->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+
 
     <!--Google Fonts-->
     <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
