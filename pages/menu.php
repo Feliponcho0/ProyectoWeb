@@ -41,8 +41,6 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 
-
-    <!--Google Fonts-->
     <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Nunito:ital,wght@0,200..1000;1,200..1000&family=Roboto+Slab:wght@100..900&display=swap" rel="stylesheet">
 
@@ -150,19 +148,10 @@
                                 </div>
                             </div>
                         </li>
-                        <li>
-                            <a href="#" class="dropdown-item d-flex align-items-center p-2 ps-3 gap-2">
-                                <i class="bi bi-person-circle fs-3"></i>
-                                <div>
-                                    <strong class="tipoLetra d-block">Mi perfil</strong>
-                                    <small class="text-muted d-block">Editar datos y contraseña</small>
-                                </div>
-                            </a>
-                        </li>
 
                         <li><hr class="mt-1 mb-1"></li>
                         <li>
-                            <a href="../index.html" class="dropdown-item d-flex align-items-center text-danger p-2 mb-2 ps-3 gap-2">
+                            <a href="../index.php" class="dropdown-item d-flex align-items-center text-danger p-2 mb-2 ps-3 gap-2">
                                 <i class="bi bi-x-circle fs-3 text-danger"></i>
                                 <div>
                                     <strong class="tipoLetra d-block">Cerrar sesion</strong>

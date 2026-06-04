@@ -128,7 +128,7 @@
             </button>
             <ul class="dropdown-menu">
                 <li><a class="dropdown-item filtro-rol" data-rol="todos" href="#">Todos los roles</a></li>
-                <li><a class="dropdown-item filtro-rol" data-rol="Administrador" href="#">Administrador</a></li>
+                <!-- <li><a class="dropdown-item filtro-rol" data-rol="Administrador" href="#">Administrador</a></li> -->
                 <li><a class="dropdown-item filtro-rol" data-rol="Gerente" href="#">Gerente</a></li>
                 <li><a class="dropdown-item filtro-rol" data-rol="Cajero" href="#">Cajero</a></li>
             </ul>
@@ -306,6 +306,13 @@
             const rows = resp.data.map(usuario => {
                 const estadoTexto = usuario.activo == 1 ? 'Activo' : 'Inactivo';
                 const estadoClass = usuario.activo == 1 ? 'bg-success' : 'bg-danger';
+                // const idLogiado = $_SESSION['usuarios_id'] == usuario.usuarios_id;
+                // if(idLogiado == usuario.usuarios_id){
+                //     idLogiado = true;
+                // }else{
+                //     idLogiado = false;
+                // }
+
                 return `
                 <div class="card shadow mb-3">
                     <div class="card-body titulo-secundario d-flex gap-1">
@@ -320,22 +327,29 @@
                             <span class="d-block badge bg-primary rounded-5">${usuario.rol}</span>
                         </div>
                         <div class="mt-3 ms-auto">
+
                             ${usuario.activo == 1 ?
-                                `<button class="btn_cambiar_estatus boton-rojo-hover btn bg-danger btn-sm me-2 text-white" data-id="${usuario.usuarios_id}" data-nombre="${usuario.nombre_usuario}" data-status="${usuario.activo}">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="1.25">
-                                        <path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" />
-                                        <path d="M13.5 6.5l4 4" />
-                                    </svg>
-                                    Desactivar
-                                </button>`
-                                :
-                                `<button class="btn_cambiar_estatus boton-verde-hover btn bg-success btn-sm me-2 text-white" data-id="${usuario.usuarios_id}" data-nombre="${usuario.nombre_usuario}" data-status="${usuario.activo}">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="1.25">
-                                        <path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" />
-                                        <path d="M13.5 6.5l4 4" />
-                                    </svg>
-                                    Activar
-                                </button>`
+                            `<button id = "btn_inabilitar" class="btn_cambiar_estatus boton-rojo-hover btn bg-danger btn-sm me-2 text-white"
+                                data-id="${usuario.usuarios_id}"
+                                data-nombre="${usuario.nombre_usuario}"
+                                data-status="${usuario.activo}">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="1.25">
+                                    <path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" />
+                                    <path d="M13.5 6.5l4 4" />
+                                </svg>
+                                Desactivar
+                            </button>`
+                            :
+                            `<button id = "btn_inabilitar" class="btn_cambiar_estatus boton-verde-hover btn bg-success btn-sm me-2 text-white"
+                                data-id="${usuario.usuarios_id}"
+                                data-nombre="${usuario.nombre_usuario}"
+                                data-status="${usuario.activo}">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="1.25">
+                                    <path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" />
+                                    <path d="M13.5 6.5l4 4" />
+                                </svg>
+                                Activar
+                            </button>`
                             }
                             <button class="btn-edit boton-azul-hover btn bg-primary btn-sm me-2 text-white" data-id="${usuario.usuarios_id}">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="1.25">

@@ -1,10 +1,4 @@
 <?php
-session_start();
-
-if(!isset($_SESSION['id_usuario'])){
-    header("Location: ../index.php?error=2");
-    exit();
-}
 $tienda_id = $_SESSION['tiendas_id'] ?? 0;
 $nombre_tienda = "Sin tienda asignada";
 

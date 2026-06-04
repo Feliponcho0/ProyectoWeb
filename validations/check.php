@@ -16,14 +16,6 @@ function require_rol($rol){
     }
 }
 
-function require_tienda(){
-    require_login();
-    if($_SESSION['rol'] !== 'Administrador' && ($_SESSION['tiendas_id'] === null || $_SESSION['tiendas_id'] <= 0)){
-        header('Location: ../index.php?error=5');
-        exit;
-    }
-}
-
 function getTiendaId(){
     if($_SESSION['rol'] === 'Administrador'){
         return null;

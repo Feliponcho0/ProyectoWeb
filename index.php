@@ -19,7 +19,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Error</h5>
+                <h5 class="modal-title"  style="font-size: 24px; font-weight: bold;">Error</h5>
             </div>
             <div class="modal-body">
                 <?php
@@ -41,7 +41,7 @@
                             break;
 
                         case 5:
-                            echo '<p class="text-danger" style="font-size: 24px;">NO TIENES PERMITIDO ACCEDER A ESTA AREA.</p>';
+                            echo '<p class="text-danger">Tu tienda esta dada de baja.</p>';
                             break;
                     }
                 ?>
@@ -83,13 +83,13 @@
                     
                     <form action = "validations/validarLogin.php" method = "post" class = "text-start">
                         <div class = "mb-3 form-floating mb-3">
-                            <input type = "text" class = "form-control border border-primary border-2" id = "nombre_usuario" name = "nombre_usuario" required placeholder = "Ingresa tu usuario o correo">
+                            <input type = "text" class = "form-control border border-primary border-2" id = "nombre_usuario" name = "nombre_usuario" required placeholder = "">
                                 <label for="usuario" class = "form-label fw-semibold">
-                                    Usuario o Correo
+                                    Usuario
                                 </label>
                         </div>
                         <div class = "mb-3 form-floating mb-3">
-                            <input type = "password" class = "form-control border border-primary border-2" id = "password" name = "password" required placeholder = "Ingresa tu contraseña">
+                            <input type = "password" class = "form-control border border-primary border-2" id = "password" name = "password" required placeholder = "">
                             <label for = "password" class = "form-label fw-semibold">
                                 Contraseña
                             </label>

@@ -1,8 +1,3 @@
-<<<<<<< HEAD
-
-
-=======
->>>>>>> 121ae95a2c91a09b26b32421d72a84ac5147806f
 <div id="alertBox" class="mt-3"></div>
 <div class="pb-2 mb-0">
     <div class="d-flex justify-content-between align-items-center">
@@ -143,8 +138,4 @@
         window.open('../api/reportes/reporte_pdf.php?fecha_inicio=' + fecha_inicio + '&fecha_fin=' + fecha_fin,'_blank');
     });
 
-<<<<<<< HEAD
 </script>
-=======
-</script>
->>>>>>> 121ae95a2c91a09b26b32421d72a84ac5147806f

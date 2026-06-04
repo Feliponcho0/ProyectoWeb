@@ -11,8 +11,24 @@
         $sql .= " AND u.tiendas_id = " . intval($_SESSION['tiendas_id']);
     }
     
-    if ($rol !== 'todos') {
-        $sql .= " AND u.rol = '$rol'";
+    // desactivar su 
+    if ($_SESSION['rol'] === 'Administrador') {
+        $sql .= " AND u.rol IN ('Gerente', 'Cajero')";
+    } elseif ($_SESSION['rol'] === 'Gerente') {
+        $sql .= " AND u.rol = 'Cajero'";
+    }
+    
+    if ($rol !== 'todos' && $_SESSION['rol'] !== 'Administrador') {
+        if ($_SESSION['rol'] === 'Gerente' && $rol === 'Cajero') {
+        } elseif ($_SESSION['rol'] === 'Gerente' && $rol !== 'Cajero') {
+            $sql .= " AND 1=0";
+        }
+    } elseif ($rol !== 'todos' && $_SESSION['rol'] === 'Administrador') {
+        if ($rol === 'Gerente' || $rol === 'Cajero') {
+            $sql .= " AND u.rol = '$rol'";
+        } else {
+            $sql .= " AND 1=0";
+        }
     }
     
     if (!empty($search)) {
