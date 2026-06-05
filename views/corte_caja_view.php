@@ -229,7 +229,7 @@ $(document).ready(function () {
     const modalCerrar = new bootstrap.Modal(document.getElementById('modalCerrarTurno'));
     const modalVer    = new bootstrap.Modal(document.getElementById('modalVerTurno'));
 
-    // ── Helpers ──────────────────────────────────────────────
+    // Helpers 
     function fmt(val) {
         return '$' + parseFloat(val || 0).toFixed(2);
     }
@@ -244,7 +244,7 @@ $(document).ready(function () {
         return `<span class="badge px-3 py-2" style="background-color:${s.bg};color:${s.color};border-radius:20px;">${s.label}</span>`;
     }
 
-    // ── Cargar turnos del día ─────────────────────────────────
+    //  Cargar turnos del día 
     function cargarTurnosActivos() {
         $.getJSON('../api/corte_turno/get_turnos.php', function (resp) {
             if (!resp.ok) return;
