@@ -184,10 +184,6 @@
         </div>
     </div>
 </div>
-<!--
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>-->
 
 <script>
     let filtroRolActual = 'todos';
@@ -198,6 +194,7 @@
     const modalAgregarUsuario = new bootstrap.Modal(document.getElementById('modal_agregar_usuario'));
     const modalSeleccionarTienda = new bootstrap.Modal(document.getElementById('modalSeleccionarTienda'));
 
+    
     function escapeHtml(str) {
         if (!str) return '';
         return str.replace(/[&<>]/g, function(m) {
@@ -368,6 +365,7 @@
         });
     }
 
+    // Agregar nuevo usuario
     function agregarUsuario() {
         const nombre = document.getElementById('nuevo_nombre').value.trim();
         const password = document.getElementById('nuevo_password').value;
@@ -509,7 +507,8 @@
                 Swal.fire('Error', 'Error al cargar los datos del usuario', 'error');
             });
         });
-        
+
+        // Actualizar usuario
         $("#formEdit").submit(function(e) {
             e.preventDefault();
             

@@ -338,11 +338,7 @@
                 e.preventDefault();
 
                 $.post('../api/tiendas/update_tienda.php', $(this).serialize(), function(resp) {
-                    try {
-                        resp = JSON.parse(resp);  
-                    } catch(e) {
-                        resp = {ok: false, msg: 'Error al actualizar tienda'};
-                    }
+                    try {resp = JSON.parse(resp);} catch(e) {resp = {ok: false, msg: 'Error al actualizar tienda'};}
 
                     if (!resp.ok) {
                         showAlert('danger', resp.msg || 'Error al editar la tienda');
