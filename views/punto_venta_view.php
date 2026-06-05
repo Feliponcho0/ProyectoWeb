@@ -1,3 +1,4 @@
+
 <?php
     $puede_vender = true;
     $mensaje_turno = '';

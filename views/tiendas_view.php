@@ -1,3 +1,4 @@
+
 <div class="pb-2 mb-0">
     <div class="d-flex justify-content-between align-items-center">
         <h1 class="tipoLetra fw-semibold pb-2 fs-4">Gestión de Tiendas</h1>
@@ -245,13 +246,13 @@
                             let estadoClaseBtn;
 
                             if (t.activo==1) {
-                                estadoClaseFiltro = 'tienda-activa activa';
-                                estadoTexto = 'Activa';
-                                estadoClaseBtn = 'btn-success';
+                                estadoClaseFiltro ='tienda-activa activa';
+                                estadoTexto ='Activa';
+                                estadoClaseBtn ='btn-success';
                             } else{
-                                estadoClaseFiltro = 'tienda-inactiva';
-                                estadoTexto = 'Inactiva';
-                                estadoClaseBtn = 'btn-danger';
+                                estadoClaseFiltro ='tienda-inactiva';
+                                estadoTexto ='Inactiva';
+                                estadoClaseBtn ='btn-danger';
                             }
 
                             html += `

@@ -3,7 +3,6 @@
     require_once 'conection.php';
 
     session_start();
-
     // Limpiar sesión anterior si existe
     if (isset($_SESSION['id_usuario'])) {
         session_unset();
@@ -15,7 +14,7 @@
     $contra = $_POST['password'] ?? '';
 
     if (empty($nombre_usuario) || empty($contra)) {
-        header('Location: ../index.html?error=1');
+        header('Location: ../index.php?error=1');
         exit();
     }
 
@@ -27,7 +26,7 @@
     $resultado = $stmt->get_result();
 
     if ($resultado->num_rows === 0) {
-        header('Location: ../index.html?error=1');
+        header('Location: ../index.php?error=1');
         exit();
     }
 
@@ -35,7 +34,7 @@
 
     // Verificar que esté activo
     if ($fila['activo'] != 1) {
-        header('Location: ../index.html?error=4');
+        header('Location: ../index.php?error=4');
         exit();
     }
     
@@ -45,13 +44,13 @@
     }
 
     if (!$password_valida) {
-        header('Location: ../index.html?error=1');
+        header('Location: ../index.php?error=1');
         exit();
     }
 
     // Verificar tienda para no administradores
     if ($fila['rol'] !== 'Administrador' && ($fila['tiendas_id'] === null || $fila['tiendas_id'] <= 0)) {
-        header('Location: ../index.html?error=5');
+        header('Location: ../index.php?error=5');
         exit();
     }
 

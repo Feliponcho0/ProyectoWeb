@@ -1,3 +1,4 @@
+
 <!-- perfil_view.php -->
 <div class="pb-2 mb-0">
     <h1 class="tipoLetra fw-semibold pb-2 fs-4">Mi Perfil</h1>
@@ -73,7 +74,7 @@ $(document).ready(function() {
             if (resp.ok) {
                 showAlert('success', 'Contraseña actualizada correctamente');
                 setTimeout(function() {
-                    window.location.href = '../index.html';
+                    window.location.href = '../index.php';
                 }, 1000);
             } else {
                 showAlert('danger', resp.msg || 'Error al cambiar la contraseña');

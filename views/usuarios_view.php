@@ -1,6 +1,7 @@
-<div class="titulo-principal pb-2 mb-0">
-    <div class="d-flex justify-content-between">
-        <h1 class="tipoLetra fw-bold pb-2">Usuarios</h1>
+
+<div class="pb-2 mb-0">
+    <div class="d-flex justify-content-between align-items-center">
+        <h1 class="tipoLetra fw-semibold pb-2 fs-4">Usuarios</h1>
         <button onclick="abrirModalAgregar();" class="boton-azul-hover btn bg-primary me-2 text-white">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="#FFFFFF">
                 <path d="M12 4a1 1 0 0 1 1 1v6h6a1 1 0 0 1 0 2h-6v6a1 1 0 0 1 -2 0v-6h-6a1 1 0 0 1 0 -2h6v-6a1 1 0 0 1 1 -1" />
@@ -136,7 +137,9 @@
     
     <div class="row mt-3">
         <div class="col-md-12 mb-3">
-            <div id="contenedorUsuarios"></div>
+            <div id="contenedorUsuarios">
+                
+            </div>
         </div>
     </div>
 </div>
@@ -165,9 +168,6 @@
                     </div>
                     <p class="mb-1">Rol</p>
                     <div class="mb-3">
-                        <label class="form-check-inline">
-                            <input type="radio" name="edit_rol" value="Administrador"> Administrador
-                        </label>
                         <label class="form-check-inline">
                             <input type="radio" name="edit_rol" value="Gerente"> Gerente
                         </label>

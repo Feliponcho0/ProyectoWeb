@@ -5,6 +5,7 @@
     $password = "wUlj5spC069pdX720lpm";
     $database = "bdzgbhzoece2npuq85jz";
 
+
     // $servername = "sql312.infinityfree.com";
     // $username = "if0_42064577";
     // $password = "1644162176";

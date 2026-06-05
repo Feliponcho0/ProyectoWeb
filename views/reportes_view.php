@@ -1,7 +1,8 @@
+
 <div id="alertBox" class="mt-3"></div>
 <div class="pb-2 mb-0">
     <div class="d-flex justify-content-between align-items-center">
-        <h1 class="tipoLetra fw-semibold pb-2 fs-4">Reportes de Ventas</h1>
+        <h1 class="tipoLetra fw-semibold pb-2 fs-4">Reporte de Ventas</h1>
         <button id="btn_exportar_pdf" class="btn btn-danger text-white" disabled>
             <i class="bi bi-file-earmark-pdf"></i> Exportar PDF
         </button>

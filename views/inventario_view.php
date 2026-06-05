@@ -1,3 +1,4 @@
+
 <div id="alertBox" class="mt-3"></div>
 <div class="pb-2 mb-0">
     <div class="d-flex justify-content-between">
@@ -6,6 +7,11 @@
             <button id="btn_agregar_producto" class="boton-azul-hover btn bg-primary me-2 text-white">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="#FFFFFF" class="icon icon-tabler icons-tabler-filled icon-tabler-plus"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M12 4a1 1 0 0 1 1 1v6h6a1 1 0 0 1 0 2h-6v6a1 1 0 0 1 -2 0v-6h-6a1 1 0 0 1 0 -2h6v-6a1 1 0 0 1 1 -1" /></svg>
                 Agregar Producto
+            </button>
+
+            <button id="btn_importar_productos" class="boton-verde-hover btn bg-success me-2 text-white">
+                <i class="bi bi-download"></i>
+                Importar Productos
             </button>
         </div>
     </div>
@@ -104,18 +110,6 @@
                                 </div>
                             </div>
                         </div>
-                        <!--
-                        <div class="row mt-3">
-                            <div class="col-md-6">
-
-                                <h2 class="small">Imagen del producto</h2>
-                                <form id="form_agregar_producto" method="POST" enctype="multipart/form-data">
-                                    <div class="mb-3">
-                                        <input type="file" name="imagen" accept="image/*" required>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>-->
                     </div>
                     <div class="modal-footer gap-3">
                         <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancelar</button>
@@ -125,6 +119,32 @@
             </div>
         </div>
     </div>
+
+<!-- Modal importar productos -->
+<div class="modal fade" tabindex="-1" aria-hidden="true" id="modal_importar_productos">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title d-flex align-items-center gap-3">
+                    <i class="bi bi-download fs-2" style="color: #1A2B4A"></i>
+                    Importar Productos
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p class="text-muted small">Selecciona una tienda para importar sus productos a tu inventario.</p>
+                <label class="form-label fw-semibold">Tienda origen</label>
+                <select id="select_tienda_origen" class="form-select border-primary">
+                    <option value="" disabled selected>Selecciona una tienda...</option>
+                </select>
+            </div>
+            <div class="modal-footer gap-3">
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" id="btn_confirmar_importar" class="btn btn-success">Importar</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 <!-- Modal editar producto -->
 <div class="modal fade" tabindex="-1" aria-hidden="true" id="modal_editar_producto">
@@ -177,13 +197,12 @@
         </div>
     </div>
 </div>
-
-
 <!--JQUERY-->
 <script>
     $(document).ready(function() {
         const modalAgregar = new bootstrap.Modal(document.getElementById('modal_agregar_producto'));
         const modaledit = new bootstrap.Modal(document.getElementById('modal_editar_producto'));
+        const modalImportar = new bootstrap.Modal(document.getElementById('modal_importar_productos'));
 
         // Agregar producto modal
         $('#btn_agregar_producto').click(function() {
@@ -222,7 +241,7 @@
                                 <td>${p.activo == 1 ? 'Activo' : 'Inactivo'}</td>
                                 <td>
                                     <button class="btn btn-sm btn-primary btn_editar" data-id="${p.producto_id}">Editar</button>
-                                    <button class="btn btn-sm ${estadoClaseBtn} btn_cambiar_estado" data-id="${p.producto_id}" data-nombre="${p.nombre_producto}" data-estado="${p.activo}">
+                                    <button class="btn btn-sm ${estadoClaseBtn} btn_cambiar_estado boton-verde-hover" data-id="${p.producto_id}" data-nombre="${p.nombre_producto}" data-estado="${p.activo}">
                                         ${estadoTexto}
                                     </button>
                                 </td>
@@ -235,6 +254,56 @@
 
             });
         }
+        // Abrir modal importar
+        $('#btn_importar_productos').click(function() {
+            $.getJSON('../api/tiendas/list_tiendas.php', function(resp) {
+                if (resp.ok) {
+                    let options = '<option value="" disabled selected>Selecciona una tienda...</option>';
+                    const tiendaActual = <?php echo $_SESSION['tiendas_id']; ?>;
+                    resp.data.forEach(t => {
+                        if (t.tiendas_id != tiendaActual && t.activo == 1) {
+                            options += `<option value="${t.tiendas_id}">${t.nombre_tienda}</option>`;
+                        }
+                    });
+                    $('#select_tienda_origen').html(options);
+                    modalImportar.show();
+                }
+            });
+        });
+
+        // Confirmar importar
+        $('#btn_confirmar_importar').click(function() {
+            const tienda_origen = $('#select_tienda_origen').val();
+            if (!tienda_origen) {
+                showAlert('danger', 'Selecciona una tienda primero.');
+                return;
+            }
+
+            Swal.fire({
+                title: '¿Importar productos?',
+                text: 'Solo se importarán productos que no existan en tu tienda.',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#22b043',
+                cancelButtonColor: '#ff0000',
+                confirmButtonText: 'Sí, importar',
+                cancelButtonText: 'Cancelar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.post('../api/inventario/importar_productos.php', {tienda_origen: tienda_origen }, function(resp) {
+                        try { resp = JSON.parse(resp); } catch(e) { resp = { ok: false }; }
+                        if (resp.ok) {
+                            modalImportar.hide();
+                            showAlert('success', resp.msg || 'Productos importados correctamente.');
+                            cargarProductos();
+                        } else {
+                            showAlert('danger', resp.msg || 'Error al importar productos.');
+                        }
+                    });
+                }
+            });
+        });
+
 
         // Agregar producto
         $('#form_agregar_producto').submit(function(e) {
