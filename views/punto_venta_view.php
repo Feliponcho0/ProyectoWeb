@@ -155,7 +155,7 @@
     });
 
 
-
+    //Buscar producto por codigo
     $(document).on('keypress', '#busqueda_producto', function(e) {
         if (e.which === 13) { //enter
             let codigo= $(this).val();

@@ -29,7 +29,6 @@
         </div>
     </div>
 
-    <!-- Grafica -->
     <div class="card border-0 shadow-sm mb-4" id="card_grafica" style="display:none;">
         <div class="card-body p-4">
             <h6 class="fw-bold mb-3">Ventas por día</h6>
@@ -96,7 +95,6 @@
             // Validar que haya ventas en ese rango de fechas
             if (resp.data.length === 0) {
                 showAlert('warning', 'No se encontraron ventas en ese rango de fechas.');
-                $('#card_grafica').hide();// Ocultar la gráfica
                 $('#card_tabla').hide();// Ocultar la tabla
                 $('#btn_exportar_pdf').prop('disabled', true);// Deshabilitar el botón de exportar PDF
                 return;

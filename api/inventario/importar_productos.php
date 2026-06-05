@@ -24,6 +24,7 @@
         $productos[] = $row;
     }
 
+    // si no hay productos nuevos para importar, muestra mensaje
     if (count($productos) === 0) {
         echo json_encode(['ok' => false, 'msg' => 'No hay productos nuevos para importar.']);
         return;

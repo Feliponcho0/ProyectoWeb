@@ -9,8 +9,6 @@ $fecha_inicio = $_GET['fecha_inicio'] ?? '';
 $fecha_fin = $_GET['fecha_fin'] ?? '';
 
 //obtener nombre de la tienda
-
-// Obtener nombre de la tienda
 $queryTienda = "SELECT nombre_tienda FROM tiendas WHERE tiendas_id = ?";
 $rowsTienda = $conn->prepare($queryTienda);
 $rowsTienda->bind_param("i", $tiendas_id);
@@ -29,6 +27,7 @@ $resultadoVentas = $rowsVentas->get_result();
 
 $ventas = [];
 $total = 0;
+//recorrer ventas
 while($row = $resultadoVentas->fetch_assoc()){
     $ventas[] = $row;
     $total = $total + $row['total'];
@@ -42,7 +41,7 @@ $pdf->SetFont('Arial','B',16);
 $pdf->Cell(0,10,'Reporte de Ventas',0,1,'C');
 $pdf->SetFont('Arial','',12);// fuente normal
 $pdf->Cell(0, 8, 'Tienda: ' . $nombre_tienda, 0, 1, 'C');//ancho, alto, texto, borde, salto de linea, alineacion
-$pdf->Cell(0, 8, 'Periodo: ' . $fecha_inicio . ' al ' . $fecha_fin, 0, 1, 'C');
+$pdf->Cell(0, 8, 'Periodo: '. $fecha_inicio .' al '.$fecha_fin, 0, 1, 'C');
 $pdf->Ln(5);
 
 //encabezado

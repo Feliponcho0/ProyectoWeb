@@ -92,8 +92,6 @@ try{
     //titulo final
     $pdf->SetFont('Arial','B',10);
     $pdf->Cell(70,5,'GRACIAS POR SU COMPRA',0,1,'C');
-
-    //descarga
     $pdf->Output('I', 'ticket_'.$venta['numero_ticket'].'.pdf');
     exit;
 

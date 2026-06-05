@@ -7,6 +7,7 @@ $tiendas_id = $_SESSION['tiendas_id'];
 $fecha_inicio = $_GET['fecha_inicio'] ?? '';
 $fecha_fin = $_GET['fecha_fin'] ?? '';
 
+//obtener ventas entre fechas
 $queryReporte = "SELECT v.ventas_id, v.numero_ticket, v.total, v.fecha, u.nombre_usuario FROM ventas v INNER JOIN usuarios u ON 
 v.usuarios_id = u.usuarios_id WHERE v.tiendas_id = ? AND DATE(v.fecha) BETWEEN ? AND ? ORDER BY v.fecha ASC";
 

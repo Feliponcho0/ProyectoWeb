@@ -110,20 +110,12 @@ $(document).ready(function() {
 
                 if (!c.corte_caja_id) {
                     estado = '<span class="badge bg-secondary">Pendiente</span>';
-                    acciones = `<button class="btn btn-sm btn-success btn_iniciar" 
-                                    data-id="${c.usuarios_id}" 
-                                    data-nombre="${c.nombre_usuario}">
-                                    Iniciar
-                                </button>`;
+                    acciones = `<button class="btn btn-sm btn-success btn_iniciar" data-id="${c.usuarios_id}" data-nombre="${c.nombre_usuario}" Iniciar</button>`;
                     fondo = '-'; sistema = '-'; efectivo = '-'; diferencia = '-';
 
                 } else if (!c.fecha_fin) {
                     estado = '<span class="badge bg-success">Activo</span>';
-                    acciones = `<button class="btn btn-sm btn-danger btn_cerrar" 
-                                    data-corte="${c.corte_caja_id}" 
-                                    data-nombre="${c.nombre_usuario}">
-                                    Cerrar
-                                </button>`;
+                    acciones = `<button class="btn btn-sm btn-danger btn_cerrar" data-corte="${c.corte_caja_id}" data-nombre="${c.nombre_usuario}" Cerrar</button>`;
                     fondo = '$' + parseFloat(c.saldo_inicial).toFixed(2);
                     sistema = '-'; efectivo = '-'; diferencia = '-';
 
