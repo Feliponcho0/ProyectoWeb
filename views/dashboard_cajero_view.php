@@ -1,10 +1,4 @@
-<?php
 
-if(!isset($_SESSION['id_usuario'])){
-    header("Location: ../index.php?error=2");
-    exit();
-}
-?>
 
 <div class="container-fluid mt-4">
     <div class="row">

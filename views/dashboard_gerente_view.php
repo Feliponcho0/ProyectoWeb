@@ -1,10 +1,3 @@
-<?php
-
-if(!isset($_SESSION['id_usuario'])){
-    header("Location: ../index.php?error=2");
-    exit();
-}
-?>
 
 <div class="pb-2 mb-0">
     <div class="card border-0 shadow-sm mb-4 p-3 mt-4">
