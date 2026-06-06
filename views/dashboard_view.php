@@ -42,7 +42,8 @@
     <!-- Ventas por tienda -->
     <div class="card border-0 shadow-sm mt-3">
         <div class="card-body p-4">
-            <h6 class="fw-bold mb-3">Ventas del día por tienda</h6>
+            
+            <h6 class="fw-bold mb-3" id="titulo_tiendas"></h6>
             <div class="table-responsive">
                 <table class="table table-striped table-hover">
                     <thead>
@@ -66,6 +67,11 @@
 
 <script>
 $(document).ready(function() {
+    // Obtener fecha actual y formatearla de forma descriptiva
+    const fecha= new Date();
+    const fechaDescriptiva = fecha.toLocaleDateString('es-MX', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+    $('#titulo_tiendas').text(`Ventas del día ${fechaDescriptiva}`);
+
     $.getJSON('../api/dashboard/get_dashboard_admin.php', function(resp) {
         if (resp.ok) {
             $('#total_tiendas').text(resp.data.total_tiendas);

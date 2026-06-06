@@ -4,7 +4,7 @@
 
     $tiendas_id = $_SESSION['tiendas_id'] ?? 0;
 
-    // obtiene el nombre de la tienda
+    // obtiene el total de ventas del día
     $queryTotalDia = "SELECT SUM(total) as total_dia FROM ventas WHERE tiendas_id = ? AND DATE(fecha) = CURDATE()";
     $stmtTotalDia = $conn->prepare($queryTotalDia);
     $stmtTotalDia->bind_param("i", $tiendas_id);

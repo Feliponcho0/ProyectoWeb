@@ -57,7 +57,7 @@
 <!---->
 <div class="card border-0 shadow-sm mt-2">
     <div class="card-body p-4">
-        <h6 class="fw-bold mb-3">Productos más vendidos hoy</h6>
+        <h6 class="fw-bold mb-3" id="titulo_productos"></h6>
         <div class="table-responsive">
             <table class="table table-striped table-hover">
                 <thead>
@@ -75,11 +75,16 @@
         </div>
     </div>
 </div>
+<!--JQuery-->
 <script>
 $(document).ready(function() {
+    const fecha= new Date();
+    const fechaDescriptiva = fecha.toLocaleDateString('es-MX', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+    $('#titulo_productos').text(`Productos más vendidos: ${fechaDescriptiva}`);
+    
     $.getJSON('../api/dashboard/get_dashboard_gerente.php', function(resp) {
         if (resp.ok) {
-            $('#total_dia').text('$' + resp.data.total_dia);
+            $('#total_dia').text('$' +resp.data.total_dia);
             $('#num_ventas').text(resp.data.num_ventas);
             $('#bajo_stock').text(resp.data.bajo_stock);
 
@@ -100,5 +105,6 @@ $(document).ready(function() {
         }
     });
 });
+
 </script>
 

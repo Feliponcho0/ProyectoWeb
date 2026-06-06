@@ -173,11 +173,19 @@
 
                 let p= resp.data;
 
-                //Verificar si el producto está activo
+                // verifica si el stock es mayor a 0
+                if (p.stock <= 0){
+                    showAlert('danger', 'Este producto no tiene existencia en el inventario');
+                    return;
+                }
+
+
+                //verifica si el producto está activo
                 if (p.activo== 0){
                     showAlert('danger', 'Producto no encontrado');
                     return;
                 }
+
 
                 let filaExiste= $(`#tabletventa tbody tr[data-codigo="${p.codigo}"]`);
                 if (filaExiste.length > 0){//Si la fila ya existe 
