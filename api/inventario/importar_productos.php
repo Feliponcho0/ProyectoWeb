@@ -31,12 +31,12 @@
     }
 
     // insertar productos en la tienda destino
-    $queryInsert = "INSERT INTO productos (codigo, nombre_producto, precio_compra, precio_venta, stock, tiendas_id) VALUES (?, ?, ?, ?, ?, ?)";
+    $queryInsert = "INSERT INTO productos (codigo, nombre_producto, precio_compra, precio_venta, stock, tiendas_id) VALUES (?, ?, ?, ?, 0, ?)";
     $stmtInsert = $conn->prepare($queryInsert);
 
     $importados = 0;
     foreach ($productos as $p) {
-        $stmtInsert->bind_param("ssddii", $p['codigo'], $p['nombre_producto'], $p['precio_compra'], $p['precio_venta'], $p['stock'], $tienda_destino);
+        $stmtInsert->bind_param("ssddi", $p['codigo'], $p['nombre_producto'], $p['precio_compra'], $p['precio_venta'], $tienda_destino);
         $stmtInsert->execute();
         $importados++;
     }

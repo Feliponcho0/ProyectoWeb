@@ -310,7 +310,6 @@
             e.preventDefault();
             console.log("Datos enviados:", $(this).serialize());
             $.post('../api/inventario/insert_producto.php', $(this).serialize(), function(resp) {
-                //console.log("Servidor dice:", resp);
                 modalAgregar.hide();
                 if (resp.ok){
                     showAlert('success', 'Producto agregado correctamente.');
