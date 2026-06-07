@@ -60,162 +60,263 @@
         </div>
     </div>
 </div>
+<!-- Modal para confirmar pago -->
+<div class="modal fade" id="modal_pago" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Confirmar pago</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body">
+                <h5>Total: $<span id="total_modal">0.00</span></h5>
+
+                <div class="mb-3">
+                    <label>Dinero recibido</label>
+                    <input type="number" id="dinero_recibido" class="form-control">
+                </div>
+
+                <div class="mb-3">
+                    <label>Cambio</label>
+                    <input type="text" id="cambio" class="form-control" readonly>
+                </div>
+            </div>
+          
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button id="confirmar_pago" class="btn btn-success">Confirmar</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 <script>
     $(document).ready(function() {
+        let productosVenta= [];
+        let totalVentas=0;
 
-    function showAlert(type, msg){
-        $('#alertBox').html(
-            `<div class="alert alert-${type} alert-dismissible fade show" role="alert">
-                ${msg} 
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>`
-        )
-    }
-
-    //Calcula el total de la venta
-    function calcularTotalVenta(){
-        let total=0;
-        $('#tabletventa tbody tr').each(function(){
-            let precio =parseFloat($(this).find('.precio').text());
-            let cantidad= parseInt($(this).find('.cantidad').text());
-            
-            total=total+precio*cantidad;
-        });
-        $('#total_venta').text(total.toFixed(2));
-    }
-
-    //Elimina la fila
-    $(document).on('click', '.btn_eliminar', function(){
-        let fila =$(this).closest('tr');
-        let nombre =$(fila).find('.nombre').text();
-
-        Swal.fire({
-            title: `¿Eliminar el producto ${nombre}?`,
-            icon: "warning",
-            showCancelButton: true,
-            confirmButtonColor: "#22b043",
-            cancelButtonColor: "#ff0000",
-            confirmButtonText: "Sí, eliminar",
-            cancelButtonText: "Cancelar"
-        }) .then((result) => {
-            if (result.isConfirmed) {
-                $(fila).remove();
-                calcularTotalVenta();
-
-                Swal.fire({
-                    icon: "success",
-                    title: "Producto eliminado correctamente",
-                    showConfirmButton: false,
-                    timer: 1500
-                })
-            }
-        })
-    })
-
-    //Genera la venta
-    $('#btn_generar_venta').click(function(){
-        let productos= [];
-        $('#tabletventa tbody tr').each(function(){
-            let producto ={
-                codigo: $(this).find('.codigo').text(),
-                precio: parseFloat($(this).find('.precio').text()),
-                cantidad :parseInt($(this).find('.cantidad').text())
-            };
-            productos.push(producto);
-        });
-        console.log(productos);
-
-        if (productos.length === 0){
-            showAlert('danger', 'No hay productos en la venta');
-            return;
+        function showAlert(type, msg){
+            $('#alertBox').html(
+                `<div class="alert alert-${type} alert-dismissible fade show" role="alert">
+                    ${msg} 
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>`
+            )
         }
 
-        let total= $('#total_venta').text();
+        //Calcula el total de la venta
+        function calcularTotalVenta(){
+            let total=0;
+            $('#tabletventa tbody tr').each(function(){
+                let precio =parseFloat($(this).find('.precio').text());
+                let cantidad= parseInt($(this).find('.cantidad').text());
 
-        $.post('../api/ventas/generar_venta.php',{
-            productos: JSON.stringify(productos),
-            total: total
-        }, function(resp){
-            console.log(resp);
-            
-            if (resp.ok){
-                showAlert('success', 'Venta generada correctamente');
-                //limpiar carrito
-                $('#tabletventa tbody').html('');
-                $('#total_venta').text('0.00');
+                total=total+precio*cantidad;
+            });
+            $('#total_venta').text(total.toFixed(2));
+        }
 
-                //abrir pdf
-                window.open('../api/ventas/ticket_pdf.php?id=' + resp.data, '_blank');
-                
-            }else{
-                showAlert('danger', resp.msg || 'Error al generar la venta');
-            }
-        }, 'json');
-    });
+        //Elimina la fila
+        $(document).on('click', '.btn_eliminar', function(){
+            let fila =$(this).closest('tr');
+            let nombre =$(fila).find('.nombre').text();
+
+            Swal.fire({
+                title: `¿Eliminar el producto ${nombre}?`,
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#22b043",
+                cancelButtonColor: "#ff0000",
+                confirmButtonText: "Sí, eliminar",
+                cancelButtonText: "Cancelar"
+            }) .then((result) => {
+                if (result.isConfirmed) {
+                    $(fila).remove();
+                    calcularTotalVenta();
+
+                    Swal.fire({
+                        icon: "success",
+                        title: "Producto eliminado correctamente",
+                        showConfirmButton: false,
+                        timer: 1500
+                    })
+                }
+            })
+        })
 
 
-    //Buscar producto por codigo
-    $(document).on('keypress', '#busqueda_producto', function(e) {
-        if (e.which === 13) { //enter
-            let codigo= $(this).val();
 
-            if(codigo.trim()===''){
-                showAlert('danger', 'Ingresa un código de producto');
+        //Genera la venta
+        $('#btn_generar_venta').click(function(){
+            let productos= [];
+            $('#tabletventa tbody tr').each(function(){
+                let producto ={
+                    codigo: $(this).find('.codigo').text(),
+                    precio: parseFloat($(this).find('.precio').text()),
+                    cantidad :parseInt($(this).find('.cantidad').text())
+                };
+                productos.push(producto);
+            });
+
+            if (productos.length === 0){
+                showAlert('danger', 'No hay productos en la venta');
                 return;
             }
 
-            $.getJSON('../api/inventario/get_one_producto.php', {codigo: codigo}, function(resp) {
-                if(!resp.ok){
-                    showAlert('danger', resp.msg || 'Error');
-                    return;
+            let total= $('#total_venta').text();
+            $('#total_modal').text(total);
+            $('#dinero_recibido').val('');
+            $('#cambio').val('');
+
+            $('#modal_pago').modal('show');
+            /*
+            $.post('../api/ventas/generar_venta.php',{ productos: JSON.stringify(productos), total:total }, function(resp){
+                if (resp.ok){
+                    showAlert('success', 'Venta generada correctamente');
+                    //limpiar carrito
+                    $('#tabletventa tbody').html('');
+                    $('#total_venta').text('0.00');
+
+                    //abrir pdf
+                    window.open('../api/ventas/ticket_pdf.php?id=' + resp.data, '_blank');
+
+                }else{
+                    showAlert('danger', resp.msg || 'Error al generar la venta');
                 }
-
-                let p= resp.data;
-
-                // verifica si el stock es mayor a 0
-                if (p.stock <= 0){
-                    showAlert('danger', 'Este producto no tiene existencia en el inventario');
-                    return;
-                }
+            }, 'json');*/
+        });
 
 
-                //verifica si el producto está activo
-                if (p.activo== 0){
-                    showAlert('danger', 'Producto no encontrado');
-                    return;
-                }
+        //Calcula el cambio
+        $('#dinero_recibido').on('input', function(){
+            let total = parseFloat($('#total_modal').text());
+            let recibido = parseFloat($(this).val());
 
+            //Verifica si el dinero recibido es mayor al total
+            if (!recibido){
+                $('#cambio').val('');
+                return;
+            }
+            
+            let cambio = recibido -total;
+            //Verifica si el dinero recibido es suficiente para cubrir el total
+            if (cambio < 0){
+                $('#cambio').val('Dinero insuficiente');
+                return;
+            }else{
+                $('#cambio').val('$' + cambio.toFixed(2));
 
-                let filaExiste= $(`#tabletventa tbody tr[data-codigo="${p.codigo}"]`);
-                if (filaExiste.length > 0){//Si la fila ya existe 
-                    let cantidad= filaExiste.find('.cantidad');
-                    let nuevaCantidad= parseInt(cantidad.text()) + 1;
-                    cantidad.text(nuevaCantidad);
-                } else{
-                    let fila= `
-                        
-                        <tr data-codigo= "${p.codigo}">
-                            <td class="codigo">${p.codigo}</td>
-                            <td class="nombre">${p.nombre_producto}</td>
-                            <td class="precio">${p.precio_venta}</td>
-                            <td class="cantidad">1</td>
-                            <td>
-                                <button class="btn btn-danger btn-sm btn_eliminar">
-                                    <i class="bi bi-trash"></i>
-                                </button>
-                            </td>
-                        </tr>
-                    `;
+            }
+        });
 
-                    $('#tabletventa tbody').append(fila);
-                }
-                calcularTotalVenta();
-                $('#busqueda_producto').val('').focus();
+        //Confirma la venta
+        $('#confirmar_pago').click(function(){
+            let total= parseFloat($('#total_modal').text());
+            let recibido = parseFloat($('#dinero_recibido').val());
+            let cambio = (recibido - total).toFixed(2);
 
+            if (!recibido || recibido < total){
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Monto insuficiente',
+                    text: 'El dinero recibido no puede ser menor al total.',
+                    confirmButtonColor: '#22b043'
+                });
+                return;
+            }
+
+            let productos= [];
+            $('#tabletventa tbody tr').each(function(){
+                let producto ={
+                    codigo: $(this).find('.codigo').text(),
+                    precio: parseFloat($(this).find('.precio').text()),
+                    cantidad :parseInt($(this).find('.cantidad').text())
+                };
+                productos.push(producto);
             });
-        }
-    });
+
+            //Genera la venta
+            $.post('../api/ventas/generar_venta.php',{ productos: JSON.stringify(productos), total:total, dinero_recibido: recibido, cambio:cambio }, function(resp){
+                if (resp.ok){
+                    showAlert('success', 'Venta generada correctamente');
+                    //limpiar carrito
+                    $('#tabletventa tbody').html('');
+                    $('#total_venta').text('0.00');
+                    $('#modal_pago').modal('hide');
+
+                    //abrir pdf
+                    //window.open('../api/ventas/ticket_pdf.php?id=' + resp.data, '_blank');
+                    window.open('../api/ventas/ticket_pdf.php?id=' + resp.data + '&recibido=' +recibido+ '&cambio=' +cambio, '_blank');
+
+
+                }else{
+                    showAlert('danger', resp.msg || 'Error al generar la venta');
+                }
+            }, 'json');
+        });
+
+        //Buscar producto por codigo
+        $(document).on('keypress', '#busqueda_producto', function(e) {
+            if (e.which === 13) { //enter
+                let codigo= $(this).val();
+
+                if(codigo.trim()===''){
+                    showAlert('danger', 'Ingresa un código de producto');
+                    return;
+                }
+
+                $.getJSON('../api/inventario/get_one_producto.php', {codigo: codigo}, function(resp) {
+                    if(!resp.ok){
+                        showAlert('danger', resp.msg || 'Error');
+                        return;
+                    }
+
+                    let p= resp.data;
+
+                    // verifica si el stock es mayor a 0
+                    if (p.stock <= 0){
+                        showAlert('danger', 'Este producto no tiene existencia en el inventario');
+                        return;
+                    }
+
+
+                    //verifica si el producto está activo
+                    if (p.activo== 0){
+                        showAlert('danger', 'Producto no encontrado');
+                        return;
+                    }
+
+
+                    let filaExiste= $(`#tabletventa tbody tr[data-codigo="${p.codigo}"]`);
+                    if (filaExiste.length > 0){//Si la fila ya existe 
+                        let cantidad= filaExiste.find('.cantidad');
+                        let nuevaCantidad= parseInt(cantidad.text()) + 1;
+                        cantidad.text(nuevaCantidad);
+                    } else{
+                        let fila= `
+
+                            <tr data-codigo= "${p.codigo}">
+                                <td class="codigo">${p.codigo}</td>
+                                <td class="nombre">${p.nombre_producto}</td>
+                                <td class="precio">${p.precio_venta}</td>
+                                <td class="cantidad">1</td>
+                                <td>
+                                    <button class="btn btn-danger btn-sm btn_eliminar">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        `;
+
+                        $('#tabletventa tbody').append(fila);
+                    }
+                    calcularTotalVenta();
+                    $('#busqueda_producto').val('').focus();
+
+                });
+            }
+        });
     });
 
 </script>

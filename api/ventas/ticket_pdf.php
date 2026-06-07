@@ -4,6 +4,8 @@ require_once '../../validations/conection.php';
 
 
 $id=$_GET['id'] ?? 0;
+$dinero_recibido = $_GET['recibido'] ?? 0;
+$cambio_get = $_GET['cambio'] ?? 0;
 
 try{
     //obtener venta
@@ -84,6 +86,9 @@ try{
 
     //total
     $pdf->Ln();
+    $pdf->SetFont('Arial','',11);
+    $pdf->Cell(70,5,'Recibido: $'.number_format($dinero_recibido, 2),0,1,'R');
+    $pdf->Cell(70,5,'Cambio:   $'.number_format($cambio_get, 2),0,1,'R');
     $pdf->SetFont('Arial','B',12);
     $pdf->Cell(70,5,'TOTAL: $'.$venta['total'],0,1,'R');
     $pdf->Ln();
