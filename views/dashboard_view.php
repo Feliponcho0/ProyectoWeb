@@ -66,29 +66,29 @@
 </div>
 
 <script>
-$(document).ready(function() {
-    // Obtener fecha actual y formatearla de forma descriptiva
-    const fecha= new Date();
-    const fechaDescriptiva = fecha.toLocaleDateString('es-MX', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
-    $('#titulo_tiendas').text(`Ventas del día ${fechaDescriptiva}`);
+    $(document).ready(function() {
+        // Obtener fecha actual y formatearla de forma descriptiva
+        const fecha= new Date();
+        const fechaDescriptiva = fecha.toLocaleDateString('es-MX', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+        $('#titulo_tiendas').text(`Ventas del día ${fechaDescriptiva}`);
 
-    $.getJSON('../api/dashboard/get_dashboard_admin.php', function(resp) {
-        if (resp.ok) {
-            $('#total_tiendas').text(resp.data.total_tiendas);
-            $('#total_usuarios').text(resp.data.total_usuarios);
+        $.getJSON('../api/dashboard/get_dashboard_admin.php', function(resp) {
+            if (resp.ok) {
+                $('#total_tiendas').text(resp.data.total_tiendas);
+                $('#total_usuarios').text(resp.data.total_usuarios);
 
-            let html = '';
-            resp.data.ventas_tiendas.forEach(t => {
-                html += `
-                    <tr>
-                        <td>${t.nombre_tienda}</td>
-                        <td>$${parseFloat(t.total_dia).toFixed(2)}</td>
-                        <td>${t.num_ventas}</td>
-                    </tr>
-                `;
-            });
-            $('#contenedor_ventas_tiendas').html(html);
-        }
+                let html = '';
+                resp.data.ventas_tiendas.forEach(t => {
+                    html += `
+                        <tr>
+                            <td>${t.nombre_tienda}</td>
+                            <td>$${parseFloat(t.total_dia).toFixed(2)}</td>
+                            <td>${t.num_ventas}</td>
+                        </tr>
+                    `;
+                });
+                $('#contenedor_ventas_tiendas').html(html);
+            }
+        });
     });
-});
 </script>

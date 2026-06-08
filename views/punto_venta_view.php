@@ -170,21 +170,6 @@
             $('#cambio').val('');
 
             $('#modal_pago').modal('show');
-            /*
-            $.post('../api/ventas/generar_venta.php',{ productos: JSON.stringify(productos), total:total }, function(resp){
-                if (resp.ok){
-                    showAlert('success', 'Venta generada correctamente');
-                    //limpiar carrito
-                    $('#tabletventa tbody').html('');
-                    $('#total_venta').text('0.00');
-
-                    //abrir pdf
-                    window.open('../api/ventas/ticket_pdf.php?id=' + resp.data, '_blank');
-
-                }else{
-                    showAlert('danger', resp.msg || 'Error al generar la venta');
-                }
-            }, 'json');*/
         });
 
 
@@ -245,8 +230,6 @@
                     $('#total_venta').text('0.00');
                     $('#modal_pago').modal('hide');
 
-                    //abrir pdf
-                    //window.open('../api/ventas/ticket_pdf.php?id=' + resp.data, '_blank');
                     window.open('../api/ventas/ticket_pdf.php?id=' + resp.data + '&recibido=' +recibido+ '&cambio=' +cambio, '_blank');
 
 
@@ -318,5 +301,4 @@
             }
         });
     });
-
 </script>
