@@ -1,4 +1,3 @@
-
 <div class="pb-2 mb-0">
     <div class="d-flex justify-content-between align-items-center">
         <h1 class="tipoLetra fw-semibold pb-2 fs-4">Usuarios</h1>
@@ -46,7 +45,7 @@
                                 <label class="form-label fw-bold">
                                     Tienda asignada
                                 </label>
-                                <button type="button" class="btn btn-light border border-primary w-100" id="btnSeleccionarTienda" onclick="abrirModalTiendas()" style="text-align: left; padding: 12px;">
+                                <button type="button" class="btn btn-light border border-primary w-100" id="btnSeleccionarTienda" onclick="abrirModalTiendas('agregar')" style="text-align: left; padding: 12px;">
                                     <span id = "tiendaSeleccionadaTexto">
                                         Seleccionar una tienda
                                     </span>
@@ -80,10 +79,13 @@
                 <div class="modal-body">
                     <div class="mb-3">
                         <div class="input-group">
-                            <!-- <span class="input-group-text">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                            <span class="input-group-text">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M3 10a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" />
+                                    <path d="M21 21l-6 -6" />
+                                </svg>
                             </span>
-                            <input type="text" id="buscarTienda" class="form-control" placeholder="Buscar tienda..."> -->
+                            <input type="text" id="buscarTienda" class="form-control" placeholder="Buscar tienda...">
                         </div>
                     </div>
                     <div class="table-responsive" style="max-height: 400px;">
@@ -128,7 +130,6 @@
             </button>
             <ul class="dropdown-menu">
                 <li><a class="dropdown-item filtro-rol" data-rol="todos" href="#">Todos los roles</a></li>
-                <!-- <li><a class="dropdown-item filtro-rol" data-rol="Administrador" href="#">Administrador</a></li> -->
                 <li><a class="dropdown-item filtro-rol" data-rol="Gerente" href="#">Gerente</a></li>
                 <li><a class="dropdown-item filtro-rol" data-rol="Cajero" href="#">Cajero</a></li>
             </ul>
@@ -175,6 +176,17 @@
                             <input type="radio" name="edit_rol" value="Cajero"> Cajero
                         </label>
                     </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">
+                            Tienda asignada
+                        </label>
+                        <button type="button" class="btn btn-light border border-primary w-100" id="btnSeleccionarTiendaEdit" onclick="abrirModalTiendas('editar')" style="text-align:left;padding:12px;">
+                            <span id="tiendaSeleccionadaTextoEdit">
+                                Seleccionar una tienda
+                            </span>
+                        </button>
+                        <input type="hidden" id="edit_tienda_id" value="">
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
@@ -185,15 +197,40 @@
     </div>
 </div>
 
+<style>
+    .modal {
+        z-index: 1050;
+    }
+    
+    #modalSeleccionarTienda {
+        z-index: 1060 !important;
+    }
+    
+    .modal-backdrop {
+        z-index: 1040 !important;
+    }
+    
+    .modal-backdrop.show {
+        z-index: 1040 !important;
+    }
+    
+    #modalSeleccionarTienda + .modal-backdrop {
+        z-index: 1059 !important;
+    }
+</style>
+
 <script>
     let filtroRolActual = 'todos';
     let busquedaActual = '';
     let tiendaSeleccionadaId = null;
+    let tiendaSeleccionadaIdEdit = null;
     let todasLasTiendas = [];
+    let modoSeleccionTienda = 'agregar';
+    let modalEditInstance = null;
+    let modalEditAbierto = false;
     
     const modalAgregarUsuario = new bootstrap.Modal(document.getElementById('modal_agregar_usuario'));
     const modalSeleccionarTienda = new bootstrap.Modal(document.getElementById('modalSeleccionarTienda'));
-
     
     function escapeHtml(str) {
         if (!str) return '';
@@ -204,9 +241,17 @@
             return m;
         });
     }
-
+    
+    function filtrarTiendas() {
+        const busqueda = $('#buscarTienda').val().toLowerCase();
+        const tiendasFiltradas = todasLasTiendas.filter(tienda => 
+            tienda.nombre_tienda.toLowerCase().includes(busqueda) ||
+            tienda.rfc.toLowerCase().includes(busqueda)
+        );
+        mostrarTabla(tiendasFiltradas);
+    }
+    
     function cargarTiendasParaModal() {
-        
         $.getJSON("../api/tiendas/list_tiendas.php", function(resp) {
             if (resp.ok && resp.data && resp.data.length > 0) {
                 let tiendasFiltradas = [];
@@ -232,7 +277,7 @@
             $('#tablaTiendas').html('<tr><td colspan="3" class="text-center text-danger">Error al cargar las tiendas</td></tr>');
         });
     }
-
+    
     function mostrarTabla(tiendas) {
         if (tiendas.length === 0) {
             $('#tablaTiendas').html('<tr><td colspan="3" class="text-center">No se encontraron tiendas</td></tr>');
@@ -265,32 +310,55 @@
             const id = $(this).data('id');
             const nombre = $(this).data('nombre');
             
-            tiendaSeleccionadaId = id;
-            $('#tiendaSeleccionadaId').val(id);
-            $('#tiendaSeleccionadaTexto').html(`${nombre}`);
-            $('#btnSeleccionarTienda').removeClass('btn-light').addClass('btn-success');
-            
-            modalSeleccionarTienda.hide();
+            if (modoSeleccionTienda === 'agregar') {
+                tiendaSeleccionadaId = id;
+                $('#tiendaSeleccionadaId').val(id);
+                $('#tiendaSeleccionadaTexto').html(`${nombre}`);
+                $('#btnSeleccionarTienda').removeClass('btn-light').addClass('btn-success');
+                modalSeleccionarTienda.hide();
+            } else if (modoSeleccionTienda === 'editar') {
+                tiendaSeleccionadaIdEdit = id;
+                $('#edit_tienda_id').val(id);
+                $('#tiendaSeleccionadaTextoEdit').html(`${nombre}`);
+                $('#btnSeleccionarTiendaEdit').removeClass('btn-light').addClass('btn-success');
+                modalSeleccionarTienda.hide();
+                
+                setTimeout(() => {
+                    if (modalEditInstance && !modalEditAbierto) {
+                        modalEditInstance.show();
+                    }
+                }, 150);
+            }
         });
     }
     
-    function abrirModalTiendas() {
+    function abrirModalTiendas(modo) {
+        modoSeleccionTienda = modo || 'agregar';
+        
+        if (modo === 'editar' && modalEditAbierto && modalEditInstance) {
+            modalEditInstance.hide();
+        }
+        
         cargarTiendasParaModal();
         modalSeleccionarTienda.show();
+        
         setTimeout(() => {
-            $('#buscarTienda').val('').trigger('keyup');
+            if ($('#buscarTienda').length) {
+                $('#buscarTienda').val('').trigger('keyup');
+            }
         }, 500);
     }
-
+    
     function abrirModalAgregar() {
         tiendaSeleccionadaId = null;
+        modoSeleccionTienda = 'agregar';
         $('#form_agregar_usuario')[0].reset();
         $('#tiendaSeleccionadaTexto').html('Seleccionar una tienda');
         $('#btnSeleccionarTienda').removeClass('btn-success').addClass('btn-light');
         $('#tiendaSeleccionadaId').val('');
         modalAgregarUsuario.show();
     }
-
+    
     function loadUsuarios() {
         const busqueda = document.getElementById('searchUsuarios').value;
         const rol = filtroRolActual;
@@ -303,13 +371,7 @@
             const rows = resp.data.map(usuario => {
                 const estadoTexto = usuario.activo == 1 ? 'Activo' : 'Inactivo';
                 const estadoClass = usuario.activo == 1 ? 'bg-success' : 'bg-danger';
-                // const idLogiado = $_SESSION['usuarios_id'] == usuario.usuarios_id;
-                // if(idLogiado == usuario.usuarios_id){
-                //     idLogiado = true;
-                // }else{
-                //     idLogiado = false;
-                // }
-
+                
                 return `
                 <div class="card shadow mb-3">
                     <div class="card-body titulo-secundario d-flex gap-1">
@@ -324,9 +386,8 @@
                             <span class="d-block badge bg-primary rounded-5">${usuario.rol}</span>
                         </div>
                         <div class="mt-3 ms-auto">
-
                             ${usuario.activo == 1 ?
-                            `<button id = "btn_inabilitar" class="btn_cambiar_estatus boton-rojo-hover btn bg-danger btn-sm me-2 text-white"
+                            `<button class="btn_cambiar_estatus boton-rojo-hover btn bg-danger btn-sm me-2 text-white"
                                 data-id="${usuario.usuarios_id}"
                                 data-nombre="${usuario.nombre_usuario}"
                                 data-status="${usuario.activo}">
@@ -337,7 +398,7 @@
                                 Desactivar
                             </button>`
                             :
-                            `<button id = "btn_inabilitar" class="btn_cambiar_estatus boton-verde-hover btn bg-success btn-sm me-2 text-white"
+                            `<button class="btn_cambiar_estatus boton-verde-hover btn bg-success btn-sm me-2 text-white"
                                 data-id="${usuario.usuarios_id}"
                                 data-nombre="${usuario.nombre_usuario}"
                                 data-status="${usuario.activo}">
@@ -364,8 +425,7 @@
             $('#contenedorUsuarios').html(rows.join(''));
         });
     }
-
-    // Agregar nuevo usuario
+    
     function agregarUsuario() {
         const nombre = document.getElementById('nuevo_nombre').value.trim();
         const password = document.getElementById('nuevo_password').value;
@@ -388,8 +448,7 @@
             Swal.fire('Error', 'Debe seleccionar una tienda', 'error');
             return;
         }
-
-        // loading
+        
         Swal.fire({
             title: 'Agregando usuario...',
             text: 'Por favor espere',
@@ -420,12 +479,28 @@
         }, "json").fail(function() {
             Swal.fire('Error', 'Error de conexión con el servidor', 'error');
         });
-
-        
     }
-
+    
     $(document).ready(function() {
-        const modalEdit = new bootstrap.Modal(document.getElementById('modalEdit'));
+        modalEditInstance = new bootstrap.Modal(document.getElementById('modalEdit'));
+        
+        $('#modalEdit').on('shown.bs.modal', function() {
+            modalEditAbierto = true;
+        });
+        
+        $('#modalEdit').on('hidden.bs.modal', function() {
+            modalEditAbierto = false;
+        });
+        
+        $('#modalSeleccionarTienda').on('hidden.bs.modal', function() {
+            if (modoSeleccionTienda === 'editar' && !modalEditAbierto) {
+                setTimeout(() => {
+                    if (modalEditInstance && $('#modalEdit').hasClass('show') === false) {
+                        modalEditInstance.show();
+                    }
+                }, 100);
+            }
+        });
         
         $('#buscarTienda').on('keyup', function() {
             filtrarTiendas();
@@ -445,6 +520,7 @@
             
             loadUsuarios();
         });
+        
         let timeoutId;
         $("#searchUsuarios").on("keyup", function() {
             clearTimeout(timeoutId);
@@ -457,7 +533,7 @@
             const id = $(this).data('id');
             const nombre = $(this).data('nombre');
             const estatusActual = $(this).data('status');
-
+            
             Swal.fire({
                 title: (estatusActual == 1) ? `¿Desactivar ${nombre}?` : `¿Activar ${nombre}?`,
                 text: (estatusActual == 1) ? 'El usuario no podrá iniciar sesión' : 'El usuario podrá volver a acceder al sistema',
@@ -488,7 +564,6 @@
             });
         });
         
-        // Editar usuario
         $(document).on("click", ".btn-edit", function() {
             const usuarios_id = $(this).data("id");
             $.getJSON("../api/usuarios/getUsuario.php", { usuarios_id: usuarios_id }, function(resp) {
@@ -502,21 +577,39 @@
                 $("#edit_password").val('');
                 $("#edit_correo").val(u.correo);
                 $(`input[name="edit_rol"][value="${u.rol}"]`).prop("checked", true);
-                modalEdit.show();
+                $("#edit_tienda_id").val(u.tiendas_id);
+                $("#tiendaSeleccionadaTextoEdit").html(u.nombre_tienda || 'Seleccionar una tienda');
+                
+                tiendaSeleccionadaIdEdit = u.tiendas_id;
+                
+                if (u.tiendas_id && u.nombre_tienda) {
+                    $('#btnSeleccionarTiendaEdit').removeClass('btn-light').addClass('btn-success');
+                } else {
+                    $('#btnSeleccionarTiendaEdit').removeClass('btn-success').addClass('btn-light');
+                }
+                
+                modalEditInstance.show();
             }).fail(function() {
                 Swal.fire('Error', 'Error al cargar los datos del usuario', 'error');
             });
         });
-
-        // Actualizar usuario
+        
         $("#formEdit").submit(function(e) {
             e.preventDefault();
+            
+            const tiendaId = $("#edit_tienda_id").val();
+            
+            if (!tiendaId) {
+                Swal.fire('Error', 'Debe seleccionar una tienda para el usuario', 'error');
+                return;
+            }
             
             const datos = {
                 usuarios_id: $("#id_edit").val(),
                 nombre_usuario: $("#edit_nombre").val(),
                 correo: $("#edit_correo").val(),
-                rol: $('input[name="edit_rol"]:checked').val()
+                rol: $('input[name="edit_rol"]:checked').val(),
+                tiendas_id: tiendaId
             };
             
             if ($("#edit_password").val() !== '') {
@@ -525,7 +618,7 @@
             
             $.post("../api/usuarios/updateUsuario.php", datos, function(resp) {
                 if (resp.ok) {
-                    modalEdit.hide();
+                    modalEditInstance.hide();
                     loadUsuarios();
                     Swal.fire('Éxito', 'Usuario actualizado correctamente', 'success');
                 } else {
@@ -544,4 +637,3 @@
         loadUsuarios();
     });
 </script>
-
