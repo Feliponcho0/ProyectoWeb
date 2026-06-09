@@ -1,6 +1,11 @@
+<?php
+    $rol_usuario_actual = $_SESSION['rol'] ?? 'Gerente';
+?>
+
 <div class="pb-2 mb-0">
     <div class="d-flex justify-content-between align-items-center">
         <h1 class="tipoLetra fw-semibold pb-2 fs-4">Usuarios</h1>
+        
         <button onclick="abrirModalAgregar();" class="boton-azul-hover btn bg-primary me-2 text-white">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="#FFFFFF">
                 <path d="M12 4a1 1 0 0 1 1 1v6h6a1 1 0 0 1 0 2h-6v6a1 1 0 0 1 -2 0v-6h-6a1 1 0 0 1 0 -2h6v-6a1 1 0 0 1 1 -1" />
@@ -52,6 +57,7 @@
                                 </button>
                                 <input type="hidden" id = "tiendaSeleccionadaId" value="">
                             </div>
+                            <input type="hidden" id="tiendaSeleccionadaId" value="">
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancelar</button>
@@ -176,6 +182,8 @@
                             <input type="radio" name="edit_rol" value="Cajero"> Cajero
                         </label>
                     </div>
+                    
+                    <?php if ($rol_usuario_actual === 'Admin'): ?>
                     <div class="mb-3">
                         <label class="form-label fw-bold">
                             Tienda asignada
@@ -187,6 +195,18 @@
                         </button>
                         <input type="hidden" id="edit_tienda_id" value="">
                     </div>
+                    <?php else: ?>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">
+                            Tienda asignada
+                        </label>
+                        <div class="form-control bg-light" id="tiendaReadonlyDisplay" style="background-color: #e9ecef !important; cursor: not-allowed;">
+                            Cargando...
+                        </div>
+                        <input type="hidden" id="edit_tienda_id" value="">
+                        <small class="text-muted">Solo administradores pueden modificar la tienda</small>
+                    </div>
+                    <?php endif; ?>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
@@ -228,6 +248,7 @@
     let modoSeleccionTienda = 'agregar';
     let modalEditInstance = null;
     let modalEditAbierto = false;
+    let rolUsuarioActual = '<?php echo $rol_usuario_actual; ?>';
     
     const modalAgregarUsuario = new bootstrap.Modal(document.getElementById('modal_agregar_usuario'));
     const modalSeleccionarTienda = new bootstrap.Modal(document.getElementById('modalSeleccionarTienda'));
@@ -333,6 +354,12 @@
     }
     
     function abrirModalTiendas(modo) {
+        // Si es Gerente, no permitir abrir el modal de selección
+        if (rolUsuarioActual !== 'Admin') {
+            Swal.fire('Acceso denegado', 'Solo administradores pueden modificar la tienda', 'error');
+            return;
+        }
+        
         modoSeleccionTienda = modo || 'agregar';
         
         if (modo === 'editar' && modalEditAbierto && modalEditInstance) {
@@ -350,6 +377,7 @@
     }
     
     function abrirModalAgregar() {
+        
         tiendaSeleccionadaId = null;
         modoSeleccionTienda = 'agregar';
         $('#form_agregar_usuario')[0].reset();
@@ -427,6 +455,7 @@
     }
     
     function agregarUsuario() {
+        
         const nombre = document.getElementById('nuevo_nombre').value.trim();
         const password = document.getElementById('nuevo_password').value;
         const correo = document.getElementById('nuevo_correo').value.trim();
@@ -578,14 +607,20 @@
                 $("#edit_correo").val(u.correo);
                 $(`input[name="edit_rol"][value="${u.rol}"]`).prop("checked", true);
                 $("#edit_tienda_id").val(u.tiendas_id);
-                $("#tiendaSeleccionadaTextoEdit").html(u.nombre_tienda || 'Seleccionar una tienda');
                 
-                tiendaSeleccionadaIdEdit = u.tiendas_id;
-                
-                if (u.tiendas_id && u.nombre_tienda) {
-                    $('#btnSeleccionarTiendaEdit').removeClass('btn-light').addClass('btn-success');
+                if (rolUsuarioActual === 'Admin') {
+                    // Admin: puede editar la tienda
+                    $("#tiendaSeleccionadaTextoEdit").html(u.nombre_tienda || 'Seleccionar una tienda');
+                    tiendaSeleccionadaIdEdit = u.tiendas_id;
+                    
+                    if (u.tiendas_id && u.nombre_tienda) {
+                        $('#btnSeleccionarTiendaEdit').removeClass('btn-light').addClass('btn-success');
+                    } else {
+                        $('#btnSeleccionarTiendaEdit').removeClass('btn-success').addClass('btn-light');
+                    }
                 } else {
-                    $('#btnSeleccionarTiendaEdit').removeClass('btn-success').addClass('btn-light');
+                    // Gerente: solo puede ver la tienda (readonly)
+                    $('#tiendaReadonlyDisplay').html(u.nombre_tienda || 'No asignada');
                 }
                 
                 modalEditInstance.show();
@@ -599,7 +634,8 @@
             
             const tiendaId = $("#edit_tienda_id").val();
             
-            if (!tiendaId) {
+            // Solo Admin necesita validar la tienda
+            if (rolUsuarioActual === 'Admin' && !tiendaId) {
                 Swal.fire('Error', 'Debe seleccionar una tienda para el usuario', 'error');
                 return;
             }
