@@ -2,8 +2,10 @@
     require_once "../../validations/check.php";
     require_once "../../validations/conection.php";  
     $codigo = $_GET['codigo'] ?? 0;
-    $cons = $conn->prepare("SELECT * FROM productos WHERE codigo = ?");
-    $cons->bind_param('s', $codigo);
+    $tiendas_id = $_SESSION['tiendas_id'] ?? 0;
+
+    $cons = $conn->prepare("SELECT * FROM productos WHERE codigo = ? AND tiendas_id = ?");
+    $cons->bind_param('si', $codigo, $tiendas_id);
     $cons->execute();
     $res = $cons->get_result();
     $row = $res->fetch_assoc();
