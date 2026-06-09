@@ -1,5 +1,5 @@
 <?php
-    $rol_usuario_actual = $_SESSION['rol'] ?? 'Gerente';
+    $rol_usuario_actual = $_SESSION['rol'] ?? '';
 ?>
 
 <div class="pb-2 mb-0">
@@ -183,7 +183,7 @@
                         </label>
                     </div>
                     
-                    <?php if ($rol_usuario_actual === 'Admin'): ?>
+                    <?php if ($rol_usuario_actual === 'Administrador'): ?>
                     <div class="mb-3">
                         <label class="form-label fw-bold">
                             Tienda asignada
@@ -204,7 +204,7 @@
                             Cargando...
                         </div>
                         <input type="hidden" id="edit_tienda_id" value="">
-                        <small class="text-muted">Solo administradores pueden modificar la tienda</small>
+                        <small class="text-muted">Solo el administrador pueden modificar la tienda</small>
                     </div>
                     <?php endif; ?>
                 </div>
@@ -355,8 +355,8 @@
     
     function abrirModalTiendas(modo) {
         // Si es Gerente, no permitir abrir el modal de selección
-        if (rolUsuarioActual !== 'Admin') {
-            Swal.fire('Acceso denegado', 'Solo administradores pueden modificar la tienda', 'error');
+        if (rolUsuarioActual !== 'Administrador') {
+            Swal.fire('Acceso denegado', 'Solo el administrador pueden modificar la tienda', 'error');
             return;
         }
         
@@ -402,16 +402,19 @@
                 
                 return `
                 <div class="card shadow mb-3">
-                    <div class="card-body titulo-secundario d-flex gap-1">
+                    <div class="card-body titulo-secundario d-flex gap-1 align-items-center">
                         <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
                             <path d="M3 12a9 9 0 1 0 18 0a9 9 0 1 0 -18 0" />
                             <path d="M9 10a3 3 0 1 0 6 0a3 3 0 1 0 -6 0" />
                             <path d="M6.168 18.849a4 4 0 0 1 3.832 -2.849h4a4 4 0 0 1 3.834 2.855" />
                         </svg>
                         <div>
-                            <h2 class="mt-2 d-block fw-semibold mb-1">${escapeHtml(usuario.nombre_usuario)}</h2>
-                            <span class="badge ${estadoClass} mb-2">${estadoTexto}</span>
-                            <span class="d-block badge bg-primary rounded-5">${usuario.rol}</span>
+                            <h2 class="mt-2 d-block fw-semibold mb-1 fs-3">${escapeHtml(usuario.nombre_usuario)}</h2>
+                            <div class="d-flex gap-2 mt-1">
+                                <span class="badge ${estadoClass}">${estadoTexto}</span>
+                                <span class="badge bg-primary rounded-5">${usuario.rol}</span>
+                                <span class="badge bg-secondary rounded-5">${usuario.nombre_tienda || 'Sin tienda'}</span>
+                            </div>
                         </div>
                         <div class="mt-3 ms-auto">
                             ${usuario.activo == 1 ?
@@ -608,7 +611,7 @@
                 $(`input[name="edit_rol"][value="${u.rol}"]`).prop("checked", true);
                 $("#edit_tienda_id").val(u.tiendas_id);
                 
-                if (rolUsuarioActual === 'Admin') {
+                if (rolUsuarioActual === 'Administrador') {
                     // Admin: puede editar la tienda
                     $("#tiendaSeleccionadaTextoEdit").html(u.nombre_tienda || 'Seleccionar una tienda');
                     tiendaSeleccionadaIdEdit = u.tiendas_id;
@@ -635,7 +638,7 @@
             const tiendaId = $("#edit_tienda_id").val();
             
             // Solo Admin necesita validar la tienda
-            if (rolUsuarioActual === 'Admin' && !tiendaId) {
+            if (rolUsuarioActual === 'Administrador' && !tiendaId) {
                 Swal.fire('Error', 'Debe seleccionar una tienda para el usuario', 'error');
                 return;
             }

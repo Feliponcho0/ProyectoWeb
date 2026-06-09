@@ -13,7 +13,7 @@ if (!$corte_id) {
 }
 
 // Obtener datos del corte
-$queryCorte = "SELECT usuarios_id, fecha_inicio FROM corte_caja WHERE corte_caja_id = ?";
+$queryCorte = "SELECT usuarios_id, fecha_inicio, saldo_inicial FROM corte_caja WHERE corte_caja_id = ?";
 $stmtCorte = $conn->prepare($queryCorte);
 $stmtCorte->bind_param("i", $corte_id);
 $stmtCorte->execute();
@@ -28,9 +28,10 @@ $stmtVentas->execute();
 $resultadoVentas = $stmtVentas->get_result();
 $ventas = $resultadoVentas->fetch_assoc();
 $total_sistema = $ventas['total_sistema'] ?? 0;
+$saldo_inicial = $corte['saldo_inicial'] ?? 0;
 
 // Calcular diferencia
-$diferencia = $efectivo_real - $total_sistema;
+$diferencia = $efectivo_real - ($total_sistema + $saldo_inicial);
 
 // Cerrar turno
 $queryUpdate = "UPDATE corte_caja SET fecha_fin = NOW(), ingresos_efectivo = ?, total_sistema = ?, total_real = ?, diferencia = ?, observaciones = ? WHERE corte_caja_id = ?";

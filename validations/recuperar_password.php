@@ -72,6 +72,8 @@ try {
 
     // Contenido del correo
     $mail->isHTML(true);
+    $mail->CharSet = 'UTF-8';
+    $mail->Encoding = 'base64';
     $mail->Subject = 'Recuperación de contraseña - CORE Multistore';
     $mail->Body = "
     <html>

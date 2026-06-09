@@ -1,8 +1,7 @@
 <div id="alertBox" class="mt-3"></div>
 <div class="pb-2 mb-0">
-    <h1 class="tipoLetra fw-semibold pb-2 fs-4">Corte de Caja
-        <small class="fs-6 fw-normal text-muted ms-2" id="fecha_hoy"></small>
-    </h1>
+    <h1 class="tipoLetra fw-semibold pb-2 fs-4">Corte de Caja</h1>
+    <small class="fs-6 fw-normal text-muted mb-3 d-block" id="fecha_hoy"></small>
 
     <div class="card border-0 shadow-sm">
         <div class="card-body p-4">
@@ -115,9 +114,10 @@
 </div>
 
 <script>
-    const hoy = new Date();
-    const opciones = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-    document.getElementById('fecha_hoy').textContent = hoy.toLocaleDateString('es-MX', opciones);
+    const fecha= new Date();
+    const fechaDescriptiva = fecha.toLocaleDateString('es-MX', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+    $('#fecha_hoy').text(`Hoy: ${fechaDescriptiva}`);
+
 
     let intervaloActualizacion = null;
 

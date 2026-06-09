@@ -17,6 +17,14 @@
     $nombre_usuario = $_SESSION['nombre_usuario'] ?? 'Usuario';
     $rol_usuario = $_SESSION['rol'] ?? '';
     $correo_usuario = $_SESSION['correo'] ?? '';
+
+    $turno_activo = true;
+    if ($rol_usuario === 'Cajero') {
+        $check = $conn->prepare("SELECT corte_caja_id FROM corte_caja WHERE usuarios_id = ? AND fecha_fin IS NULL AND DATE(fecha_inicio) = CURDATE()");
+        $check->bind_param("i", $_SESSION['id_usuario']);
+        $check->execute();
+        $turno_activo = $check->get_result()->num_rows > 0;
+    }
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -68,7 +76,7 @@
                     </a>
                     <?php endif; ?>
 
-                    <?php if ($rol_usuario === 'Gerente' || $rol_usuario === 'Cajero'): ?>
+                    <?php if ($rol_usuario === 'Gerente' || ($rol_usuario === 'Cajero' && $turno_activo)): ?>
                     <a id="punto_venta" href="punto_venta.php" class="nav-link d-flex gap-2">
                         <i class="bi bi-laptop"></i> Punto de Venta
                     </a>

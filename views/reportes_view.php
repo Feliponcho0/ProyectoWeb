@@ -29,10 +29,9 @@
         </div>
     </div>
 
-    <div class="card border-0 shadow-sm mb-4" id="card_grafica" style="display:none;">
+    <div class="card border-0 shadow-sm mb-4" style="display:none;">
         <div class="card-body p-4">
             <h6 class="fw-bold mb-3">Ventas por día</h6>
-            <canvas id="graficaVentas" height="100"></canvas>
         </div>
     </div>
 
